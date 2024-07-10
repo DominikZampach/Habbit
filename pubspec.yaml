@@ -1,0 +1,35 @@
+name: habbit_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.4 <4.0.0'
+
+dependencies:
+  firebase_auth: ^4.17.8
+  firebase_core: ^2.27.0
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.10+1
+  fluttertoast: ^8.2.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/kralicek.svg
+  
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/static/Montserrat-Regular.ttf
+        - asset: fonts/static/Montserrat-Bold.ttf
+          weight: 700
+        - asset: fonts/Montserrat-Italic-VariableFont_wght.ttf
+          style: italic
