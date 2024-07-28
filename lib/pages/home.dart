@@ -15,22 +15,24 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            user?.email ?? 'User email',
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                await signOut();
-                // ignore: use_build_context_synchronously
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => Login()));
-              },
-              child: Text("Sign out"))
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              user?.email ?? 'User email',
+              textAlign: TextAlign.center,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  await signOut();
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                child: Text("Sign out"))
+          ],
+        ),
       ),
     );
   }

@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habbit_app/const.dart';
 import 'package:habbit_app/pages/home.dart';
+import 'package:habbit_app/widgets/toast_auth.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -22,6 +20,7 @@ class AuthService {
       );
 
       await Future.delayed(const Duration(milliseconds: 500));
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => HomePage()));
@@ -46,42 +45,9 @@ class AuthService {
           message = "An unknown error occurred: ${e.message}";
       }
 
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        fontSize: 20.0,
-        textColor: secondary,
-      );
-    } on PlatformException catch (e) {
-      // Handle PlatformException if needed
-      String message = '';
-      print("PlatformException caught: ${e.code}, ${e.message}");
-
-      if (e.code == 'ERROR_WEAK_PASSWORD') {
-        message = "Password should be at least 6 characters";
-      } else if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        message = e.message!;
-      } else {
-        message = "An unknown error occurred: ${e.message}";
-      }
-
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        fontSize: 20.0,
-        textColor: secondary,
-      );
+      toastAuth(message);
     } catch (e) {
-      print("An unexpected error occurred: $e"); // Catch any other exceptions
-      Fluttertoast.showToast(
-        msg: "An unexpected error occurred: $e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        fontSize: 20.0,
-        textColor: secondary,
-      );
+      toastAuth("An unexpected error occurred: $e");
     }
   }
 
@@ -120,22 +86,9 @@ class AuthService {
           message = "An unknown error occurred: ${e.message}";
       }
 
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        fontSize: 20.0,
-        textColor: secondary,
-      );
+      toastAuth(message);
     } catch (e) {
-      print("An unexpected error occurred: $e"); // Catch any other exceptions
-      Fluttertoast.showToast(
-        msg: "An unexpected error occurred: $e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        fontSize: 20.0,
-        textColor: secondary,
-      );
+      toastAuth("An unexpected error occurred: $e");
     }
   }
 
