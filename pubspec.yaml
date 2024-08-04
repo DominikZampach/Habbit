@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.2.4 <4.0.0'
 
 dependencies:
+  awesome_bottom_bar: ^1.2.4
   cloud_firestore: ^4.15.8
   firebase_auth: ^4.17.8
   firebase_core: ^2.27.0

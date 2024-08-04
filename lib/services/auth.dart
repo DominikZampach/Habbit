@@ -22,8 +22,10 @@ class AuthService {
       await Future.delayed(const Duration(milliseconds: 500));
 
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const HomePage()));
     } on FirebaseAuthException catch (e) {
       String message = '';
       print("FirebaseAuthException caught: ${e.code}, ${e.message}");
