@@ -3,16 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
+import 'package:habbit_app/pages/mainPageBodies/edit_body.dart';
+import 'package:habbit_app/pages/mainPageBodies/home_body.dart';
+import 'package:habbit_app/pages/mainPageBodies/settings_body.dart';
 import 'package:habbit_app/services/auth.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/kralicek.dart';
 import 'package:intl/intl.dart';
 
-const List<TabItem> items = [
+const List<TabItem> navbarItems = [
   TabItem(icon: Icons.home, title: "Home"),
   TabItem(icon: Icons.edit, title: "Edit"),
   TabItem(icon: Icons.settings, title: "Settings"),
-  TabItem(icon: Icons.account_circle, title: "Account"),
+  //TabItem(icon: Icons.account_circle, title: "Account"),
 ];
 
 class HomePage extends StatefulWidget {
@@ -24,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int visit = 0;
-  late DatabaseUser? dbUser;
+  DatabaseUser? dbUser;
 
   final User? user = AuthService().currentUser;
 
@@ -34,8 +37,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    isCalendarShown = false;
     super.initState();
+    isCalendarShown = false;
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      dbUser = await _databaseService.getUser(user!.uid);
+      setState(
+          () {}); // Trigger a rebuild to update the UI with the loaded data
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
   }
 
   Future<void> signOut() async {
@@ -46,14 +60,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: selectAppBar(),
-      bottomNavigationBar: _navBarHome(),
-      body: selectBody(),
+      bottomNavigationBar: navbar(),
+      body: renderSelectedBody(),
     );
   }
 
-  BottomBarDefault _navBarHome() {
+  BottomBarDefault navbar() {
     return BottomBarDefault(
-        items: items,
+        items: navbarItems,
         backgroundColor: tertiary,
         color: primary.withOpacity(.5),
         colorSelected: primary,
@@ -106,7 +120,7 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text(
-            items[visit].title!,
+            navbarItems[visit].title!,
             style: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
           ),
         ),
@@ -137,17 +151,27 @@ class _HomePageState extends State<HomePage> {
     return day;
   }
 
-  Widget selectBody() {
+  Widget renderSelectedBody() {
+    if (visit == 0 && dbUser == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (visit == 0) {
-      return Text("Home");
+      // Home
+      return HomeBody(
+        dbUser: dbUser,
+      );
     } else if (visit == 1) {
-      return Text("Edit");
+      // Edit page
+      return const EditBody();
     } else if (visit == 2) {
-      return Text("Settings");
-    } else if (visit == 3) {
-      return Text("Account");
+      // Settings page
+      return SettingsBody();
     } else {
-      return Text("Error");
+      return const Text(
+        "Error",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+      );
     }
   }
 

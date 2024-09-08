@@ -45,4 +45,26 @@ class Habit {
       'notificationTime': notificationTime,
     };
   }
+
+  bool isHabitDoneToday() {
+    //Checks if the habit was completed today
+    DateTime now = DateTime.now();
+    DateTime todayDate = DateTime(now.year, now.month, now.day);
+    print("today's date: ${todayDate.toString()}");
+    print("days: ${daysDone.length}");
+
+    for (int index = 0; index < daysDone.length; index++) {
+      DateTime doneDate = daysDone[index].toDate();
+      DateTime doneDateWithoutTime = DateTime(doneDate.year, doneDate.month,
+          doneDate.day + 1); // Need to add +1 day, idk why
+
+      print(doneDateWithoutTime);
+
+      if (doneDateWithoutTime == todayDate) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
