@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:habbit_app/models/database_user.dart';
 
-const String USERS_COLLECTION_REF = "users";
+const USERS_COLLECTION_REF = "users";
 
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
@@ -22,19 +22,25 @@ class DatabaseService {
   }
 
   Future<DatabaseUser?> getUser(String userUid) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference userRef = firestore.collection('users').doc(userUid);
+    DocumentReference userRef = _usersRef.doc(userUid);
 
     try {
       DocumentSnapshot userSnapshot = await userRef.get();
 
       if (userSnapshot.exists) {
-        Map<String, Object?> userData =
-            userSnapshot.data() as Map<String, Object?>;
-        return DatabaseUser.fromJson(userData);
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        DatabaseUser? loadedDbUser = DatabaseUser.fromJson(userData);
+        print("data from Firebase" + loadedDbUser.userUid);
+        return loadedDbUser;
       } else {
-        print('No such document!');
-        return null;
+        // Create a new user if no such document exists
+        // TODO Opravit tuhle mrdku
+        DatabaseUser newUser =
+            DatabaseUser(habitsInClass: [], userUid: userUid);
+        await addUser(newUser); // Wait for user to be added to Firestore
+        print('No such document, created new user');
+        return newUser;
       }
     } catch (e) {
       print('Error getting document: $e');
@@ -42,7 +48,7 @@ class DatabaseService {
     }
   }
 
-  void addUser(DatabaseUser user) async {
-    await _usersRef.doc(user.userUid).set(user.toJson());
+  Future<void> addUser(DatabaseUser user) async {
+    await _usersRef.doc(user.userUid).set(user); // .set(user.toJson());
   }
 }

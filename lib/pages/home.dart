@@ -27,13 +27,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int visit = 0;
-  DatabaseUser? dbUser;
+  DatabaseUser? dbUser = null;
 
   final User? user = AuthService().currentUser;
 
   final DatabaseService _databaseService = DatabaseService();
 
   late bool isCalendarShown;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -44,9 +49,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadUserData() async {
     try {
-      dbUser = await _databaseService.getUser(user!.uid);
-      setState(
-          () {}); // Trigger a rebuild to update the UI with the loaded data
+      DatabaseUser? loadDbUser = await _databaseService.getUser(user!.uid);
+      setState(() {
+        dbUser = loadDbUser;
+      }); // Trigger a rebuild to update the UI with the loaded data
     } catch (e) {
       print('Error loading user data: $e');
     }
@@ -158,9 +164,7 @@ class _HomePageState extends State<HomePage> {
 
     if (visit == 0) {
       // Home
-      return HomeBody(
-        dbUser: dbUser,
-      );
+      return HomeBody(dbUser: dbUser);
     } else if (visit == 1) {
       // Edit page
       return const EditBody();

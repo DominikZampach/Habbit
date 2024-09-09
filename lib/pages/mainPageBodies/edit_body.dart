@@ -9,6 +9,11 @@ class EditBody extends StatefulWidget {
 
 class _EditBodyState extends State<EditBody> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return const Text("Edit page");
   }
