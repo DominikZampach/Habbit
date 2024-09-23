@@ -6,15 +6,23 @@ const USERS_COLLECTION_REF = "users";
 class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
 
-  late final CollectionReference _usersRef;
+  late final CollectionReference<DatabaseUser> _usersRef;
 
   DatabaseService() {
-    _usersRef = _firestore
-        .collection(USERS_COLLECTION_REF)
-        .withConverter<DatabaseUser>(
-            fromFirestore: (snapshots, _) =>
-                DatabaseUser.fromJson(snapshots.data()!),
-            toFirestore: (user, _) => user.toJson());
+    // Using the withConverter method to properly map the Firestore data
+    _usersRef =
+        _firestore.collection(USERS_COLLECTION_REF).withConverter<DatabaseUser>(
+              fromFirestore: (snapshot, _) {
+                final data = snapshot.data();
+                if (data != null) {
+                  return DatabaseUser.fromJson(data); // Ensure proper cast
+                } else {
+                  throw Exception("Data not found in snapshot");
+                }
+              },
+              toFirestore: (user, _) =>
+                  user.toJson(), // Convert DatabaseUser to Map<String, dynamic>
+            );
   }
 
   Stream<QuerySnapshot> getAllUsers() {
@@ -22,17 +30,13 @@ class DatabaseService {
   }
 
   Future<DatabaseUser?> getUser(String userUid) async {
-    DocumentReference userRef = _usersRef.doc(userUid);
+    DocumentReference<DatabaseUser> userRef = _usersRef.doc(userUid);
 
     try {
-      DocumentSnapshot userSnapshot = await userRef.get();
+      DocumentSnapshot<DatabaseUser> userSnapshot = await userRef.get();
 
       if (userSnapshot.exists) {
-        Map<String, dynamic> userData =
-            userSnapshot.data() as Map<String, dynamic>;
-        DatabaseUser? loadedDbUser = DatabaseUser.fromJson(userData);
-        print("data from Firebase" + loadedDbUser.userUid);
-        return loadedDbUser;
+        return userSnapshot.data();
       } else {
         // Create a new user if no such document exists
         // TODO Opravit tuhle mrdku
@@ -50,5 +54,10 @@ class DatabaseService {
 
   Future<void> addUser(DatabaseUser user) async {
     await _usersRef.doc(user.userUid).set(user); // .set(user.toJson());
+  }
+
+  void updateUser(DatabaseUser user) async {
+    await _usersRef.doc(user.userUid).update(user.toJson());
+    print("Completed user update");
   }
 }

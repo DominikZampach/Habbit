@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int visit = 0;
-  DatabaseUser? dbUser = null;
+  DatabaseUser? dbUser;
 
   final User? user = AuthService().currentUser;
 
@@ -50,16 +50,18 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadUserData() async {
     try {
       DatabaseUser? loadDbUser = await _databaseService.getUser(user!.uid);
-      setState(() {
-        dbUser = loadDbUser;
-      }); // Trigger a rebuild to update the UI with the loaded data
+      if (context.mounted) {
+        setState(() {
+          dbUser = loadDbUser;
+        }); // Trigger a rebuild to update the UI with the loaded data
+      }
     } catch (e) {
       print('Error loading user data: $e');
     }
   }
 
   Future<void> signOut() async {
-    await AuthService().signOut();
+    await AuthService().signOut(context);
   }
 
   @override

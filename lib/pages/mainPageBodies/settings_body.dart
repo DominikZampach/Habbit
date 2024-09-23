@@ -21,7 +21,7 @@ class _SettingsBodyState extends State<SettingsBody> {
     return Center(
       child: ElevatedButton(
           onPressed: () {
-            widget._authService.signOut();
+            widget._authService.signOut(context);
           },
           child: const Text("Logout")),
     );

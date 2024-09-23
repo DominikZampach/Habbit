@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habbit_app/pages/home.dart';
+import 'package:habbit_app/pages/login.dart';
 import 'package:habbit_app/widgets/toast_auth.dart';
 
 class AuthService {
@@ -19,13 +20,12 @@ class AuthService {
         password: password,
       );
 
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage()));
+      if (context.mounted) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomePage()));
+      }
     } on FirebaseAuthException catch (e) {
       String message = '';
       print("FirebaseAuthException caught: ${e.code}, ${e.message}");
@@ -63,10 +63,12 @@ class AuthService {
         password: password,
       );
 
-      await Future.delayed(const Duration(milliseconds: 500));
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => const HomePage()));
+      if (context.mounted) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomePage()));
+      }
     } on FirebaseAuthException catch (e) {
       String message = '';
       print("FirebaseAuthException caught: ${e.code}, ${e.message}");
@@ -94,7 +96,13 @@ class AuthService {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     await _firebaseAuth.signOut();
+
+    if (context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()),
+          (Route<dynamic> route) => false);
+    }
   }
 }
