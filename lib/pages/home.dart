@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
-import 'package:habbit_app/pages/mainPageBodies/edit_body.dart';
-import 'package:habbit_app/pages/mainPageBodies/home_body.dart';
-import 'package:habbit_app/pages/mainPageBodies/settings_body.dart';
+import 'package:habbit_app/pages/bodies/edit_body.dart';
+import 'package:habbit_app/pages/bodies/home_body.dart';
+import 'package:habbit_app/pages/bodies/settings_body.dart';
 import 'package:habbit_app/services/auth.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/kralicek.dart';
@@ -31,9 +31,8 @@ class _HomePageState extends State<HomePage> {
 
   final User? user = AuthService().currentUser;
 
-  final DatabaseService _databaseService = DatabaseService();
-
   late bool isCalendarShown;
+  late DatabaseService databaseService;
 
   @override
   void dispose() {
@@ -43,13 +42,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    databaseService = DatabaseService();
     isCalendarShown = false;
     _loadUserData();
   }
 
   Future<void> _loadUserData() async {
     try {
-      DatabaseUser? loadDbUser = await _databaseService.getUser(user!.uid);
+      DatabaseUser? loadDbUser = await databaseService.getUser(user!.uid);
       if (context.mounted) {
         setState(() {
           dbUser = loadDbUser;
@@ -135,6 +135,8 @@ class _HomePageState extends State<HomePage> {
       ),
       centerTitle: true,
       toolbarHeight: 80.0,
+      leading: const Kralicek(height: 80.0, padding: 15.0),
+      leadingWidth: 90.0,
     );
   }
 
@@ -166,7 +168,7 @@ class _HomePageState extends State<HomePage> {
 
     if (visit == 0) {
       // Home
-      return HomeBody(dbUser: dbUser);
+      return HomeBody(dbUser: dbUser, dbService: databaseService);
     } else if (visit == 1) {
       // Edit page
       return const EditBody();
@@ -194,7 +196,7 @@ class _HomePageState extends State<HomePage> {
       width: 500,
       height: 800,
       child: FutureBuilder(
-          future: _databaseService.getUser(user!.uid),
+          future: databaseService.getUser(user!.uid),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

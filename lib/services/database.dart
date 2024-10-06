@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:habbit_app/models/database_user.dart';
+import 'package:habbit_app/models/habit.dart';
+import 'package:habbit_app/services/auth.dart';
 
 const USERS_COLLECTION_REF = "users";
 
 class DatabaseService {
-  final _firestore = FirebaseFirestore.instance;
-
   late final CollectionReference<DatabaseUser> _usersRef;
 
   DatabaseService() {
     // Using the withConverter method to properly map the Firestore data
+    final FirebaseApp app = FirebaseAuth.instance.app;
+    final firestore = FirebaseFirestore.instanceFor(app: app);
     _usersRef =
-        _firestore.collection(USERS_COLLECTION_REF).withConverter<DatabaseUser>(
+        firestore.collection(USERS_COLLECTION_REF).withConverter<DatabaseUser>(
               fromFirestore: (snapshot, _) {
                 final data = snapshot.data();
                 if (data != null) {
@@ -59,5 +63,10 @@ class DatabaseService {
   void updateUser(DatabaseUser user) async {
     await _usersRef.doc(user.userUid).update(user.toJson());
     print("Completed user update");
+  }
+
+  void deleteHabit(DatabaseUser user, Habit habit) {
+    user.habitsInClass.remove(habit);
+    _usersRef.doc(user.userUid).update(user.toJson());
   }
 }

@@ -6,15 +6,17 @@ import 'package:habbit_app/widgets/habit_card.dart';
 
 class HomeBody extends StatefulWidget {
   final DatabaseUser? dbUser;
-  const HomeBody({super.key, required this.dbUser});
+  final DatabaseService dbService;
+  const HomeBody({super.key, required this.dbUser, required this.dbService});
 
   @override
   State<HomeBody> createState() => _HomeBodyState();
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  late int numberOfHabits;
+  late int numberOfHabits = 0;
   late int numberOfCompletedHabits = 0;
+  int dayToday = DateTime.now().weekday;
 
   @override
   void dispose() {
@@ -24,8 +26,14 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   void initState() {
     super.initState();
-    numberOfHabits = widget.dbUser!.habitsInClass.length;
-    for (int i = 0; i < numberOfHabits; i++) {
+    for (int i = 0; i < widget.dbUser!.habitsInClass.length; i++) {
+      if (Habit.findHabitByIndex(widget.dbUser!, i)!
+          .daysToDo
+          .contains(dayToday.toString())) {
+        numberOfHabits += 1;
+      }
+    }
+    for (int i = 0; i < widget.dbUser!.habitsInClass.length; i++) {
       if (widget.dbUser!.habitsInClass[i].isHabitDoneToday()) {
         numberOfCompletedHabits += 1;
       }
@@ -50,7 +58,7 @@ class _HomeBodyState extends State<HomeBody> {
       return const Text("0 habits, go create some!");
     }
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,29 +76,25 @@ class _HomeBodyState extends State<HomeBody> {
               ),
             ),
             for (int i = 0; i < widget.dbUser!.habitsInClass.length; i++)
-              HabitCard(
-                habitId: i,
-                user: widget.dbUser!,
-                onHabitToggled: updateHabitsCount,
-              ),
-            Text(widget.dbUser!.habitsInClass[0].name),
-            Icon(
-              iCONS[widget.dbUser!.habitsInClass[0].iconIndex],
-              size: 30.0,
-            ),
+              // Check if today is the day of the week that user have selected in daysToDo
+              if (Habit.findHabitByIndex(widget.dbUser!, i)!
+                  .daysToDo
+                  .contains(dayToday.toString()))
+                HabitCard(
+                  dbService: widget.dbService,
+                  positionIndex: i,
+                  user: widget.dbUser!,
+                  onHabitToggled: updateHabitsCount,
+                ),
             ElevatedButton(
                 onPressed: () {
-                  if (widget.dbUser!.habitsInClass[0].name == "Skibidi") {
-                    widget.dbUser!.habitsInClass[0].name =
-                        "Fortnite balls skibidi toilet rizz sigma female";
-                  } else {
-                    widget.dbUser!.habitsInClass[0].name = "Skibidi";
-                  }
                   setState(() {
-                    DatabaseService().updateUser(widget.dbUser!);
+                    widget.dbService.deleteHabit(
+                        widget.dbUser!, widget.dbUser!.habitsInClass[0]);
                   });
+                  updateHabitsCount();
                 },
-                child: const Text("Change name"))
+                child: const Text("Delete 1. habit"))
           ],
         ),
       ),

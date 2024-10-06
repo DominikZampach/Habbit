@@ -2,19 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
+import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/services/database.dart';
 
 class HabitCard extends StatefulWidget {
-  final int habitId;
+  final int positionIndex;
   final DatabaseUser user;
   final Function onHabitToggled;
-  final DatabaseService _databaseService = DatabaseService();
+  final DatabaseService dbService;
 
   HabitCard(
       {super.key,
-      required this.habitId,
+      required this.positionIndex,
       required this.user,
-      required this.onHabitToggled});
+      required this.onHabitToggled,
+      required this.dbService});
 
   @override
   State<HabitCard> createState() => _HabitCardState();
@@ -23,6 +25,9 @@ class HabitCard extends StatefulWidget {
 class _HabitCardState extends State<HabitCard> {
   late IconData icon;
   late bool todayCompleted;
+  late Habit habit;
+  late int listPosition;
+
   @override
   void dispose() {
     super.dispose();
@@ -30,9 +35,14 @@ class _HabitCardState extends State<HabitCard> {
 
   @override
   void initState() {
-    icon = widget.user.habitsInClass[widget.habitId].getHabitsIcon();
-    todayCompleted =
-        widget.user.habitsInClass[widget.habitId].isHabitDoneToday();
+    for (int i = 0; i < widget.user.habitsInClass.length; i++) {
+      if (widget.user.habitsInClass[i].positionIndex == widget.positionIndex) {
+        habit = widget.user.habitsInClass[i];
+        listPosition = i;
+      }
+    }
+    icon = habit.getHabitsIcon();
+    todayCompleted = habit.isHabitDoneToday();
     super.initState();
   }
 
@@ -54,7 +64,7 @@ class _HabitCardState extends State<HabitCard> {
           ),
           Expanded(
             child: Text(
-              makeShorterName(widget.user.habitsInClass[widget.habitId].name),
+              makeShorterName(habit.name),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: primary,
@@ -85,14 +95,12 @@ class _HabitCardState extends State<HabitCard> {
     setState(() {
       todayCompleted = value!;
       if (value == true) {
-        widget.user.habitsInClass[widget.habitId].daysDone
-            .add(Timestamp.fromDate(today));
-        widget._databaseService.updateUser(widget.user);
+        habit.daysDone.add(Timestamp.fromDate(today));
       } else {
-        widget.user.habitsInClass[widget.habitId].daysDone
-            .remove(Timestamp.fromDate(today));
-        widget._databaseService.updateUser(widget.user);
+        habit.daysDone.remove(Timestamp.fromDate(today));
       }
+      widget.user.habitsInClass[listPosition] = habit;
+      widget.dbService.updateUser(widget.user);
     });
     widget.onHabitToggled();
   }
