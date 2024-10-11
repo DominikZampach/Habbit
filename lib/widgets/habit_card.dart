@@ -48,6 +48,12 @@ class _HabitCardState extends State<HabitCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (habit.isHabitDoneToday()) return habitCardDone(context);
+
+    return habitCardNotDone(context);
+  }
+
+  Container habitCardNotDone(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10.0),
       margin: const EdgeInsets.all(5.0),
@@ -70,6 +76,38 @@ class _HabitCardState extends State<HabitCard> {
                 color: primary,
                 fontSize: 22,
               ),
+            ),
+          ),
+          _checkbox()
+        ],
+      ),
+    );
+  }
+
+  Container habitCardDone(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(5.0),
+      width: MediaQuery.of(context).size.width * 0.92,
+      height: 60,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: cRed.withOpacity(0.6)),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: Colors.black,
+            size: 30,
+          ),
+          Expanded(
+            child: Text(
+              makeShorterName(habit.name),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: primary,
+                  fontSize: 22,
+                  decoration: TextDecoration.lineThrough),
             ),
           ),
           _checkbox()

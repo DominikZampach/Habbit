@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
-import 'package:habbit_app/pages/bodies/add_habit_new.dart';
+import 'package:habbit_app/pages/add_habit.dart';
 
 class EditBody extends StatefulWidget {
   const EditBody({super.key});
@@ -26,13 +26,13 @@ class _EditBodyState extends State<EditBody> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: ElevatedButton(
-          //onPressed: () => Navigator.push(context,
-          //    MaterialPageRoute(builder: (context) => const AddHabitPage())),
-          onPressed: () => showDialog(
-              context: context,
-              builder: (context) {
-                return const AddHabitDialog();
-              }),
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddHabitPage())),
+          //onPressed: () => showDialog(
+          //    context: context,
+          //    builder: (context) {
+          //      return const AddHabitDialog();
+          //    }),
           style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(12.0),

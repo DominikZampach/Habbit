@@ -86,15 +86,6 @@ class _HomeBodyState extends State<HomeBody> {
                   user: widget.dbUser!,
                   onHabitToggled: updateHabitsCount,
                 ),
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    widget.dbService.deleteHabit(
-                        widget.dbUser!, widget.dbUser!.habitsInClass[0]);
-                  });
-                  updateHabitsCount();
-                },
-                child: const Text("Delete 1. habit"))
           ],
         ),
       ),

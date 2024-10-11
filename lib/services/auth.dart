@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/pages/login.dart';
-import 'package:habbit_app/widgets/toast_auth.dart';
+import 'package:habbit_app/widgets/toast.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -47,9 +47,9 @@ class AuthService {
           message = "An unknown error occurred: ${e.message}";
       }
 
-      toastAuth(message);
+      showToast(message);
     } catch (e) {
-      toastAuth("An unexpected error occurred: $e");
+      showToast("An unexpected error occurred: $e");
     }
   }
 
@@ -90,9 +90,9 @@ class AuthService {
           message = "An unknown error occurred: ${e.message}";
       }
 
-      toastAuth(message);
+      showToast(message);
     } catch (e) {
-      toastAuth("An unexpected error occurred: $e");
+      showToast("An unexpected error occurred: $e");
     }
   }
 

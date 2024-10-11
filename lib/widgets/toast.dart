@@ -1,12 +1,13 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habbit_app/const.dart';
 
-void toastAuth(String message) {
+void showToast(String message) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.SNACKBAR,
     fontSize: 20.0,
-    textColor: secondary,
+    backgroundColor: tertiary.withOpacity(0.6),
+    textColor: primary,
   );
 }
