@@ -72,29 +72,31 @@ class _AddHabitPageState extends State<AddHabitPage> {
           const SizedBox(
             height: 20.0,
           ),
-          ElevatedButton(
-              onPressed: () => _daySelect(context),
-              child: const Text(
-                "Select days",
-                style: TextStyle(fontSize: 24),
-              )),
-          const SizedBox(
-            height: 20.0,
-          ),
-          ElevatedButton(
-            onPressed: () => _selectIcon(context),
-            child: selectedIcon == null
-                ? const Text("Choose icon", style: TextStyle(fontSize: 24))
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Selected icon: ",
-                        style: TextStyle(fontSize: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  onPressed: () => _daySelect(context),
+                  child: const Text(
+                    "Days",
+                    style: TextStyle(fontSize: 24),
+                  )),
+              ElevatedButton(
+                onPressed: () => _selectIcon(context),
+                child: selectedIcon == null
+                    ? const Text("Icon", style: TextStyle(fontSize: 24))
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Icon: ",
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          Icon(selectedIcon, size: 30),
+                        ],
                       ),
-                      Icon(selectedIcon, size: 40),
-                    ],
-                  ),
+              ),
+            ],
           ),
           // Select icon and save iconIndex
           // Note
@@ -151,7 +153,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
       iconColor: primary,
       iconPickerShape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      iconPackModes: [IconPack.custom],
+      iconPackModes: [IconPack.sharpMaterial],
       //TODO create own IconPack, implement maybe that in db will be saved icon code (or name that will be saved in that list - that actually make more sense), it will be easier to work with it
     );
 
