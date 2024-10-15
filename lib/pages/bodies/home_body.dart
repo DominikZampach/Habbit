@@ -55,7 +55,7 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     if (widget.dbUser!.habitsInClass.isEmpty) {
-      return const Text("0 habits, go create some!");
+      return const Text("0 habits, go create some to edit tab!");
     }
     return SingleChildScrollView(
       child: SizedBox(

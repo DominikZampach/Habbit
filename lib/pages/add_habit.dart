@@ -1,11 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_iconpicker/Models/icon_picker_icon.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
-import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/widgets/toast.dart';
-import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddHabitPage extends StatefulWidget {
@@ -20,7 +19,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
   late String name = "";
   late String selectedDays = "";
   late List<int> alreadySelected = [];
-  late int iconIndex;
+  late String iconName;
   late IconData? selectedIcon = null;
 
   static final List<Map<int, String>> days = [
@@ -99,7 +98,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
             ],
           ),
-          // Select icon and save iconIndex
+          // Select icon and save iconName
           // Note
           // Select category: Morning, Afternoon, Evening
           // Notification time
@@ -169,9 +168,17 @@ class _AddHabitPageState extends State<AddHabitPage> {
       //TODO create own IconPack, implement maybe that in db will be saved icon code (or name that will be saved in that list - that actually make more sense), it will be easier to work with it
     );
 
-    if (newSelectedIcon != null) {
+    if (newSelectedIcon != null && newSelectedIcon != selectedIcon) {
       selectedIcon = newSelectedIcon;
+      Iterable<String> myCustomIconsKeys = myCustomIcons.keys;
+      for (var key in myCustomIconsKeys) {
+        if (myCustomIcons[key] == selectedIcon!) {
+          iconName = key;
+          break;
+        }
+      }
     }
+    print("iconName: $iconName");
     setState(() {});
   }
 

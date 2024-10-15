@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
-import 'package:habbit_app/services/auth.dart';
 
 const USERS_COLLECTION_REF = "users";
 

@@ -36,7 +36,7 @@ class Habit {
             note: json['note']! as String,
             notes: Map<String, String>.from(json['notes']! as Map),
             notificationTime: json['notificationTime']! as Timestamp,
-            iconName: json['iconIndex']! as String,
+            iconName: json['iconName']! as String,
             positionIndex: json['positionIndex']! as int);
 
   Map<String, Object?> toJson() {
