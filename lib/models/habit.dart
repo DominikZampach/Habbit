@@ -1,40 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/models/database_user.dart';
-
-const List<IconData> iCONS = [
-  Icons.access_time,
-  Icons.airplanemode_active_rounded,
-  Icons.audiotrack,
-  Icons.flag,
-  Icons.beach_access,
-  Icons.bed,
-  Icons.call,
-  Icons.build,
-  Icons.camera_alt,
-  Icons.card_travel,
-  Icons.chat,
-  Icons.child_friendly,
-  Icons.cloud,
-  Icons.computer,
-  Icons.directions_bike,
-  Icons.directions_car,
-  Icons.directions_run,
-  Icons.directions_walk,
-  Icons.email,
-  Icons.explore,
-  Icons.domain,
-  Icons.favorite,
-  Icons.pets,
-  Icons.restaurant,
-  Icons.school,
-  Icons.shopping_bag,
-  Icons.shopping_cart,
-  Icons.toys,
-  Icons.phone_android,
-  Icons.vpn_key,
-  Icons.watch
-];
 
 class Habit {
   String name;
@@ -44,7 +11,7 @@ class Habit {
   String note;
   Map<String, String> notes;
   Timestamp notificationTime;
-  int iconIndex;
+  String iconName;
   int positionIndex;
 
   Habit(
@@ -55,7 +22,7 @@ class Habit {
       required this.note,
       required this.notes,
       required this.notificationTime,
-      required this.iconIndex,
+      required this.iconName,
       required this.positionIndex});
 
   Habit.fromJson(Map<String, Object?> json) // Převod JSON objektu na Class
@@ -69,7 +36,7 @@ class Habit {
             note: json['note']! as String,
             notes: Map<String, String>.from(json['notes']! as Map),
             notificationTime: json['notificationTime']! as Timestamp,
-            iconIndex: json['iconIndex']! as int,
+            iconName: json['iconIndex']! as String,
             positionIndex: json['positionIndex']! as int);
 
   Map<String, Object?> toJson() {
@@ -81,7 +48,7 @@ class Habit {
       'note': note,
       'notes': notes,
       'notificationTime': notificationTime,
-      'iconIndex': iconIndex,
+      'iconName': iconName,
       'positionIndex': positionIndex
     };
   }
@@ -114,7 +81,7 @@ class Habit {
   }
 
   IconData getHabitsIcon() {
-    return iCONS[iconIndex];
+    return myCustomIcons[iconName]!;
   }
 
   static Habit? findHabitByIndex(DatabaseUser user, positionIndex) {

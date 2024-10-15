@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/Models/icon_picker_icon.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
+import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/widgets/toast.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
@@ -147,16 +148,30 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 
   void _selectIcon(BuildContext context) async {
-    selectedIcon = await showIconPicker(
+    IconData? newSelectedIcon = await showIconPicker(
       context,
       showSearchBar: false,
+      mainAxisSpacing: 10.0,
+      crossAxisSpacing: 10.0,
+      showTooltips: true,
+      iconSize: 55,
       iconColor: primary,
-      iconPickerShape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      iconPackModes: [IconPack.sharpMaterial],
+      iconPickerShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          side: BorderSide(color: primary, width: 0.5)),
+      iconPackModes: [IconPack.custom],
+      customIconPack: myCustomIcons,
+      barrierDismissible: false,
+      title: Text(
+        'Pick an icon',
+        style: TextStyle(color: primary),
+      ),
       //TODO create own IconPack, implement maybe that in db will be saved icon code (or name that will be saved in that list - that actually make more sense), it will be easier to work with it
     );
 
+    if (newSelectedIcon != null) {
+      selectedIcon = newSelectedIcon;
+    }
     setState(() {});
   }
 
