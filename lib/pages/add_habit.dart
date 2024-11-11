@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
@@ -16,26 +14,28 @@ class AddHabitPage extends StatefulWidget {
 
 class _AddHabitPageState extends State<AddHabitPage> {
   late TextEditingController _controllerName;
+  late TextEditingController _controllerNote;
   late String name = "";
+  late String note = "";
   late String selectedDays = "";
-  late List<int> alreadySelected = [];
-  late String iconName;
+  late String iconName = "";
   late IconData? selectedIcon = null;
+  late List<bool> isDaySelected = [for (int i = 0; i < 7; i++) false];
 
-  static final List<Map<int, String>> days = [
-    //Getting brain damage from this, but dont want to make it look normal
-    {1: "Monday"},
-    {2: "Tuesday"},
-    {3: "Wednesday"},
-    {4: "Thursday"},
-    {5: "Friday"},
-    {6: "Saturday"},
-    {7: "Sunday"}
-  ];
-  static List<MultiSelectItem<int>> daysItems = [];
+  static final Map<int, String> daysMap = {
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday",
+    7: "Sunday"
+  };
 
   @override
   void dispose() {
+    _controllerName.dispose();
+    _controllerNote.dispose();
     super.dispose();
   }
 
@@ -43,15 +43,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
   void initState() {
     super.initState();
     _controllerName = TextEditingController(text: name);
-
-    daysItems = days.map((day) {
-      final key = day.keys.first;
-      final value = day.values.first;
-      return MultiSelectItem<int>(key, value);
-    }).toList();
+    _controllerNote = TextEditingController(text: note);
   }
 
   void _createHabitFunc() {
+    convertIsDaySelectedToSelectedDays();
     if (_controllerName.text.length > 22) {
       // Name too long
       showToast("Name is too long, make it under 22 characters");
@@ -66,84 +62,112 @@ class _AddHabitPageState extends State<AddHabitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      body: Column(
-        children: [
-          _nameField(),
-          const SizedBox(
-            height: 20.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                  onPressed: () => _daySelect(context),
-                  child: const Text(
-                    "Days",
-                    style: TextStyle(fontSize: 24),
-                  )),
-              ElevatedButton(
-                onPressed: () => _selectIcon(context),
-                child: selectedIcon == null
-                    ? const Text("Icon", style: TextStyle(fontSize: 24))
-                    : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "Icon: ",
-                            style: TextStyle(fontSize: 24),
-                          ),
-                          Icon(selectedIcon, size: 30),
-                        ],
-                      ),
-              ),
-            ],
-          ),
-          // Select icon and save iconName
-          // Note
-          // Select category: Morning, Afternoon, Evening
-          // Notification time
-          const SizedBox(
-            height: 20.0,
-          ),
-          ElevatedButton(
-              onPressed: _createHabitFunc, child: const Text("Create Habit"))
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _showIconPickerIcon(context),
+                _nameField(),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _daySelect(context),
+            _noteField(),
+            // Select category: Morning, Afternoon, Evening
+            // Notification time
+            const SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+                onPressed: _createHabitFunc, child: const Text("Create Habit"))
+          ],
+        ),
       ),
     );
   }
 
-  void _daySelect(BuildContext context) async {
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (ctx) {
-          return MultiSelectBottomSheet(
-            title: const Text("Select days:"),
-            items: daysItems,
-            initialValue: alreadySelected,
-            onConfirm: (values) {
-              selectedDays = "";
-              alreadySelected.clear();
+  Flexible _showIconPickerIcon(BuildContext context) {
+    return Flexible(
+      flex: 2,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            GestureDetector(
+              onTap: () => _selectIcon(context),
+              child: selectedIcon == null
+                  ? Icon(
+                      Icons.add_circle_rounded,
+                      size: 60,
+                      color: cRed.withOpacity(0.8),
+                    )
+                  : Icon(
+                      selectedIcon!,
+                      size: 60,
+                      color: primary,
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              List<int> intValues = values.cast<int>();
-              intValues.sort();
-              if (values.isEmpty) {
-                return;
-              }
-              for (int value in intValues) {
-                selectedDays += "$value,";
-                alreadySelected.add(value);
-              }
-              if (selectedDays.isNotEmpty) {
-                selectedDays =
-                    selectedDays.substring(0, selectedDays.length - 1);
-                print(selectedDays);
-              }
-            },
-            minChildSize: 0.2,
-            maxChildSize: 0.8,
-          );
-        });
+  Widget _daySelect(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i = 1; i < 5; i++) _dayButton(i),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i = 5; i < 8; i++) _dayButton(i),
+          ],
+        )
+      ],
+    );
+  }
+
+  TextButton _dayButton(int i) {
+    return TextButton(
+      onPressed: () {
+        isDaySelected[i - 1] = !isDaySelected[i - 1];
+        setState(() {});
+      },
+      style: ButtonStyle(
+          shape: const MaterialStatePropertyAll(
+              CircleBorder(eccentricity: 0, side: BorderSide.none)),
+          backgroundColor: MaterialStatePropertyAll(isDaySelected[i - 1]
+              ? secondary.withOpacity(0.5)
+              : tertiary.withOpacity(0.3)),
+          padding: const MaterialStatePropertyAll(EdgeInsets.all(15.0))),
+      child: Text(
+        daysMap[i]!.substring(0, 3),
+        style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  void convertIsDaySelectedToSelectedDays() {
+    selectedDays = "";
+    for (int i = 0; i < 7; i++) {
+      if (isDaySelected[i]) {
+        selectedDays += "$i,";
+      }
+    }
+    selectedDays = selectedDays.substring(0, selectedDays.length - 1);
   }
 
   void _selectIcon(BuildContext context) async {
@@ -165,7 +189,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
         'Pick an icon',
         style: TextStyle(color: primary),
       ),
-      //TODO create own IconPack, implement maybe that in db will be saved icon code (or name that will be saved in that list - that actually make more sense), it will be easier to work with it
     );
 
     if (newSelectedIcon != null && newSelectedIcon != selectedIcon) {
@@ -177,9 +200,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
           break;
         }
       }
+      print("iconName: $iconName");
+      setState(() {});
     }
-    print("iconName: $iconName");
-    setState(() {});
   }
 
   AppBar _appBar() {
@@ -198,7 +221,46 @@ class _AddHabitPageState extends State<AddHabitPage> {
     );
   }
 
-  Padding _nameField() {
+  Flexible _nameField() {
+    return Flexible(
+      flex: 6,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Habit name",
+              style: TextStyle(
+                  color: primary,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 20.0),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: _controllerName,
+              obscureText: false,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: secondary.withOpacity(0.4),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(10))),
+              style: TextStyle(
+                  color: primary,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 20.0),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding _noteField() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
       child: Column(
@@ -206,7 +268,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Habit name",
+            "Note",
             style: TextStyle(
                 color: primary, fontWeight: FontWeight.normal, fontSize: 20.0),
           ),
@@ -214,8 +276,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
             height: 10,
           ),
           TextField(
-            controller: _controllerName,
+            controller: _controllerNote,
             obscureText: false,
+            maxLines: 2,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: secondary.withOpacity(0.4),
