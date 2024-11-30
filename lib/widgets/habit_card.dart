@@ -11,7 +11,7 @@ class HabitCard extends StatefulWidget {
   final Function onHabitToggled;
   final DatabaseService dbService;
 
-  HabitCard(
+  const HabitCard(
       {super.key,
       required this.positionIndex,
       required this.user,

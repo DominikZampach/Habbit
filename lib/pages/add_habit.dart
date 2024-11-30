@@ -3,7 +3,8 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/widgets/toast.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+
+enum Categories { morning, afternoon, evening }
 
 class AddHabitPage extends StatefulWidget {
   const AddHabitPage({super.key});
@@ -19,7 +20,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
   late String note = "";
   late String selectedDays = "";
   late String iconName = "";
+  late DateTime notificationTime;
   late IconData? selectedIcon = null;
+  late Categories? selectedCategory = Categories.morning;
   late List<bool> isDaySelected = [for (int i = 0; i < 7; i++) false];
 
   static final Map<int, String> daysMap = {
@@ -49,12 +52,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
   void _createHabitFunc() {
     convertIsDaySelectedToSelectedDays();
     if (_controllerName.text.length > 22) {
-      // Name too long
       showToast("Name is too long, make it under 22 characters");
-      // TODO: Else if (at least 1 day has to be chosen, There must be selected icon, selected category)
+    } else if (_controllerName.text.isEmpty) {
+      showToast("You must enter habit name");
+    } else if (selectedIcon == null) {
+      showToast("You must choose an icon");
+    } else if (selectedDays == "") {
+      showToast("You must choose at least 1 day");
     } else {
-      // Get back to edit page and create new habit, that will be added to user and then into database
-      showToast("Everything is alright.");
+      //TODO: Get back to edit page and create new habit, that will be added to user and then into database
+      showToast("Everything is alright");
     }
   }
 
@@ -76,8 +83,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
             const SizedBox(height: 20),
             _daySelect(context),
             _noteField(),
-            // Select category: Morning, Afternoon, Evening
-            // Notification time
+            const SizedBox(height: 10.0),
+            _categorySelect(),
+            //TODO: Notification time
             const SizedBox(
               height: 20.0,
             ),
@@ -89,11 +97,85 @@ class _AddHabitPageState extends State<AddHabitPage> {
     );
   }
 
+  Padding _categorySelect() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "Category",
+            style: TextStyle(
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 20.0,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: RadioListTile.adaptive(
+                  value: Categories.morning,
+                  groupValue: selectedCategory,
+                  onChanged: (Categories? value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
+                  title: const Text(
+                    "Morning",
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                  contentPadding: const EdgeInsets.all(0),
+                ),
+              ),
+              Expanded(
+                child: RadioListTile.adaptive(
+                  value: Categories.afternoon,
+                  groupValue: selectedCategory,
+                  onChanged: (Categories? value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
+                  title: const Text(
+                    "Afternoon",
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                  contentPadding: const EdgeInsets.all(0),
+                ),
+              ),
+              Expanded(
+                child: RadioListTile.adaptive(
+                  value: Categories.evening,
+                  groupValue: selectedCategory,
+                  onChanged: (Categories? value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
+                  title: const Text(
+                    "Evening",
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                  contentPadding: const EdgeInsets.all(0),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Flexible _showIconPickerIcon(BuildContext context) {
     return Flexible(
       flex: 2,
       child: Padding(
-        padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+        padding: const EdgeInsets.only(top: 10.0, left: 15.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +249,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
         selectedDays += "$i,";
       }
     }
-    selectedDays = selectedDays.substring(0, selectedDays.length - 1);
+    if (selectedDays != "") {
+      selectedDays = selectedDays.substring(0, selectedDays.length - 1);
+    }
   }
 
   void _selectIcon(BuildContext context) async {
