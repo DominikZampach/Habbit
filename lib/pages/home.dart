@@ -19,15 +19,17 @@ const List<TabItem> navbarItems = [
 ];
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int visit;
+  final DatabaseUser? dbUser;
+  const HomePage({super.key, this.visit = 0, this.dbUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int visit = 0;
   DatabaseUser? dbUser;
+  late int visit;
 
   final User? user = AuthService().currentUser;
 
@@ -42,9 +44,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    visit = widget.visit;
     databaseService = DatabaseService();
+    if (widget.dbUser == null) {
+      _loadUserData();
+    } else {
+      dbUser = widget.dbUser;
+    }
     isCalendarShown = false;
-    _loadUserData();
   }
 
   Future<void> _loadUserData() async {

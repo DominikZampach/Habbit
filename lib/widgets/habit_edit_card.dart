@@ -36,6 +36,7 @@ class _HabitCardState extends State<HabitEditCard> {
 
   @override
   void initState() {
+    setState(() {});
     for (int i = 0; i < widget.user.habitsInClass.length; i++) {
       if (widget.user.habitsInClass[i].positionIndex == widget.positionIndex) {
         habit = widget.user.habitsInClass[i];
@@ -57,7 +58,6 @@ class _HabitCardState extends State<HabitEditCard> {
                     habit: habit,
                     user: widget.user,
                     dbService: widget.dbService,
-                    updateEditBody: widget.updateEditBody,
                   ))),
       child: Dismissible(
         key: Key("${habit.name}_${widget.positionIndex}"),

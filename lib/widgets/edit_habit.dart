@@ -5,19 +5,21 @@ import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
+import 'package:habbit_app/pages/bodies/edit_body.dart';
+import 'package:habbit_app/pages/bodies/home_body.dart';
+import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
 
 class EditHabit extends StatefulWidget {
   final Habit habit;
   final DatabaseUser user;
   final DatabaseService dbService;
-  final Function updateEditBody;
-  const EditHabit(
-      {super.key,
-      required this.habit,
-      required this.user,
-      required this.dbService,
-      required this.updateEditBody});
+  const EditHabit({
+    super.key,
+    required this.habit,
+    required this.user,
+    required this.dbService,
+  });
 
   @override
   State<EditHabit> createState() => _EditHabitState();
@@ -133,8 +135,14 @@ class _EditHabitState extends State<EditHabit> {
                 break;
               }
             }
-            widget.updateEditBody();
-            Navigator.of(context).pop();
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage(
+                          visit: 1,
+                          dbUser: widget.user,
+                        )));
           }),
     );
   }
