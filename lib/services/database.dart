@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
 
+// ignore: constant_identifier_names
 const USERS_COLLECTION_REF = "users";
 
 class DatabaseService {
@@ -65,7 +66,13 @@ class DatabaseService {
   }
 
   void deleteHabit(DatabaseUser user, Habit habit) {
+    int indexOfHabit = habit.positionIndex;
     user.habitsInClass.remove(habit);
+    for (Habit habit in user.habitsInClass) {
+      if (habit.positionIndex > indexOfHabit) {
+        habit.positionIndex -= 1;
+      }
+    }
     _usersRef.doc(user.userUid).update(user.toJson());
   }
 }

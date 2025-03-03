@@ -5,30 +5,34 @@ import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
-import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
-import 'package:habbit_app/widgets/toast.dart';
 
-class AddHabitPage extends StatefulWidget {
+class EditHabit extends StatefulWidget {
+  final Habit habit;
+  final DatabaseUser user;
   final DatabaseService dbService;
-  final DatabaseUser? dbUser;
-
-  const AddHabitPage(
-      {super.key, required this.dbService, required this.dbUser});
+  final Function updateEditBody;
+  const EditHabit(
+      {super.key,
+      required this.habit,
+      required this.user,
+      required this.dbService,
+      required this.updateEditBody});
 
   @override
-  State<AddHabitPage> createState() => _AddHabitPageState();
+  State<EditHabit> createState() => _EditHabitState();
 }
 
-class _AddHabitPageState extends State<AddHabitPage> {
+class _EditHabitState extends State<EditHabit> {
   late TextEditingController _controllerName;
   late TextEditingController _controllerNote;
-  late String name = "";
-  late String note = "";
-  late String selectedDays = "";
-  late String iconName = "";
-  late DateTime? notificationTime = null;
-  late IconData? selectedIcon = null;
+  late String name = widget.habit.name;
+  late String note = widget.habit.note;
+  late String selectedDays = widget.habit.daysToDo;
+  late String iconName = widget.habit.iconName;
+  late IconData? selectedIcon = myCustomIcons[iconName];
+  late DateTime notificationTime = widget.habit.notificationTime.toDate();
+  late List<Timestamp> daysDone = widget.habit.daysDone;
   late List<bool> isDaySelected = [for (int i = 0; i < 7; i++) false];
 
   static final Map<int, String> daysMap = {
@@ -53,40 +57,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
     super.initState();
     _controllerName = TextEditingController(text: name);
     _controllerNote = TextEditingController(text: note);
-  }
-
-  void _createHabitFunc() {
-    convertIsDaySelectedToSelectedDays();
-    if (_controllerName.text.length > 22) {
-      showToast("Name is too long, make it under 22 characters");
-    } else if (_controllerName.text.isEmpty) {
-      showToast("You must enter habit name");
-    } else if (selectedIcon == null) {
-      showToast("You must choose an icon");
-    } else if (selectedDays == "") {
-      showToast("You must choose at least 1 day");
-    } else {
-      widget.dbUser!.habitsInClass.add(Habit(
-          name: _controllerName.text,
-          note: _controllerNote.text,
-          iconName: iconName,
-          daysToDo: selectedDays,
-          daysDone: [],
-          positionIndex: widget.dbUser!.habitsInClass.length,
-          notificationTime: notificationTime != null
-              ? Timestamp.fromDate(notificationTime!)
-              : Timestamp.fromDate(DateTime(2007, 6, 12, 0, 0, 0))));
-      widget.dbService.updateUser(widget.dbUser!);
-      setState(() {});
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
-    }
+    convertSelectedDaysToIsDaySelected();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,44 +82,75 @@ class _AddHabitPageState extends State<AddHabitPage> {
             const SizedBox(
               height: 20.0,
             ),
-            // TODO: Edit this Create habit button
-            _createHabitButton()
           ],
         ),
       ),
+      appBar: _appbarEditHabit(),
     );
   }
 
-  // TODO: Change design
-  ElevatedButton _createHabitButton() {
-    return ElevatedButton(
-      onPressed: _createHabitFunc,
-      style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all(secondary.withOpacity(0.5))),
-      child: const Text(
-        "Create Habit",
-        style: TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
+  AppBar _appbarEditHabit() {
+    return AppBar(
+      title: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(top: 16.0),
+          child: Text(
+            "Editing habit",
+            style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
+      centerTitle: true,
+      toolbarHeight: 80.0,
+      leading: _editHabitLeading(),
+    );
+  }
+
+  Padding _editHabitLeading() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: primary,
+            size: 30.0,
+          ),
+          onPressed: () {
+            // Updates the habit by finding it by positionIndex
+            // TODO: Insta update in edit_body
+            for (int i = 0; i < widget.user.habitsInClass.length; i++) {
+              if (widget.user.habitsInClass[i].positionIndex ==
+                  widget.habit.positionIndex) {
+                widget.user.habitsInClass[i] = Habit(
+                    name: _controllerName.text,
+                    note: _controllerNote.text,
+                    daysToDo: convertIsDaySelectedToSelectedDays(),
+                    iconName: iconName,
+                    notificationTime: Timestamp.fromDate(notificationTime),
+                    daysDone: daysDone,
+                    positionIndex: widget.habit.positionIndex);
+                widget.dbService.updateUser(widget.user);
+                break;
+              }
+            }
+            widget.updateEditBody();
+            Navigator.of(context).pop();
+          }),
     );
   }
 
   ElevatedButton _notificationTimeSelect(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        TimeOfDay initial = notificationTime == null
+        TimeOfDay initial = notificationTime == DateTime(2007, 6, 12, 0, 0, 0)
             ? TimeOfDay.now()
-            : TimeOfDay.fromDateTime(notificationTime!);
+            : TimeOfDay.fromDateTime(notificationTime);
         final TimeOfDay? time =
             await showTimePicker(context: context, initialTime: initial);
         if (time != null) {
           notificationTime = DateTime(2024, DateTime.august, 1, time.hour,
               time.minute, 0, 0, 0); // Set to August 1. 2024 for unity all over
           setState(() {});
-          //print(notificationTime.toString());
         }
       },
       child: Text(
@@ -225,7 +232,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
     );
   }
 
-  void convertIsDaySelectedToSelectedDays() {
+  String convertIsDaySelectedToSelectedDays() {
     selectedDays = "";
     for (int i = 0; i < 7; i++) {
       if (isDaySelected[i]) {
@@ -234,6 +241,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
     }
     if (selectedDays != "") {
       selectedDays = selectedDays.substring(0, selectedDays.length - 1);
+      return selectedDays;
+    }
+    return "";
+  }
+
+  void convertSelectedDaysToIsDaySelected() {
+    for (int i = 1; i <= 7; i++) {
+      if (selectedDays.contains("$i")) {
+        isDaySelected[i - 1] = true;
+      }
     }
   }
 

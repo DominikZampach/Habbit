@@ -5,22 +5,18 @@ import 'package:habbit_app/models/database_user.dart';
 
 class Habit {
   String name;
-  String category;
   String daysToDo;
   List<Timestamp> daysDone;
   String note;
-  Map<String, String> notes;
   Timestamp notificationTime;
   String iconName;
   int positionIndex;
 
   Habit(
       {required this.name,
-      required this.category,
       required this.daysToDo,
       required this.daysDone,
       required this.note,
-      required this.notes,
       required this.notificationTime,
       required this.iconName,
       required this.positionIndex});
@@ -28,13 +24,11 @@ class Habit {
   Habit.fromJson(Map<String, Object?> json) // Převod JSON objektu na Class
       : this(
             name: json['name']! as String,
-            category: json['category']! as String,
             daysToDo: json['daysToDo']! as String,
             daysDone: (json['daysDone'] as List<dynamic>)
                 .map((e) => e as Timestamp)
                 .toList(),
             note: json['note']! as String,
-            notes: Map<String, String>.from(json['notes']! as Map),
             notificationTime: json['notificationTime']! as Timestamp,
             iconName: json['iconName']! as String,
             positionIndex: json['positionIndex']! as int);
@@ -42,11 +36,9 @@ class Habit {
   Map<String, Object?> toJson() {
     return {
       'name': name,
-      'category': category,
       'daysToDo': daysToDo,
       'daysDone': daysDone,
       'note': note,
-      'notes': notes,
       'notificationTime': notificationTime,
       'iconName': iconName,
       'positionIndex': positionIndex

@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
       return HomeBody(dbUser: dbUser, dbService: databaseService);
     } else if (visit == 1) {
       // Edit page
-      return const EditBody();
+      return EditBody(dbUser: dbUser, dbService: databaseService);
     } else if (visit == 2) {
       // Settings page
       return SettingsBody();
