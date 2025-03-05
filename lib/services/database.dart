@@ -65,7 +65,7 @@ class DatabaseService {
     print("Completed user update");
   }
 
-  void deleteHabit(DatabaseUser user, Habit habit) {
+  Future<void> deleteHabit(DatabaseUser user, Habit habit) async {
     int indexOfHabit = habit.positionIndex;
     user.habitsInClass.remove(habit);
     for (Habit habit in user.habitsInClass) {

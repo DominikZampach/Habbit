@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
@@ -62,15 +64,16 @@ class _HabitCardState extends State<HabitEditCard> {
       child: Dismissible(
         key: Key("${habit.name}_${widget.positionIndex}"),
         direction: DismissDirection.startToEnd,
-        onDismissed: (direction) {
+        onDismissed: (direction) async {
           // Delete the habit
           if (direction.name == "startToEnd") {
             setState(() {
               widget.user.habitsInClass.remove(habit);
             });
 
-            widget.dbService.deleteHabit(widget.user, habit);
+            await widget.dbService.deleteHabit(widget.user, habit);
             showToast("Habit named ${habit.name} deleted");
+            //sleep(const Duration(milliseconds: 500));
             widget.updateEditBody();
           }
         },

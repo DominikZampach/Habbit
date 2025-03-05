@@ -285,6 +285,18 @@ class _AddHabitPageState extends State<AddHabitPage> {
       ),
       centerTitle: true,
       toolbarHeight: 80.0,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: primary,
+              size: 30.0,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+      ),
     );
   }
 
