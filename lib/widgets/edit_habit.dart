@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
-import 'package:habbit_app/pages/bodies/edit_body.dart';
-import 'package:habbit_app/pages/bodies/home_body.dart';
 import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
 
@@ -32,7 +31,7 @@ class _EditHabitState extends State<EditHabit> {
   late String note = widget.habit.note;
   late String selectedDays = widget.habit.daysToDo;
   late String iconName = widget.habit.iconName;
-  late IconData? selectedIcon = myCustomIcons[iconName];
+  late IconData? selectedIcon = myCustomIcons[iconName]!.data;
   late DateTime notificationTime = widget.habit.notificationTime.toDate();
   late List<Timestamp> daysDone = widget.habit.daysDone;
   late List<bool> isDaySelected = [for (int i = 0; i < 7; i++) false];
@@ -227,9 +226,9 @@ class _EditHabitState extends State<EditHabit> {
         setState(() {});
       },
       style: ButtonStyle(
-          shape: const MaterialStatePropertyAll(
+          shape: const WidgetStatePropertyAll(
               CircleBorder(eccentricity: 0, side: BorderSide.none)),
-          backgroundColor: MaterialStatePropertyAll(isDaySelected[i - 1]
+          backgroundColor: WidgetStatePropertyAll(isDaySelected[i - 1]
               ? secondary.withOpacity(0.5)
               : tertiary.withOpacity(0.3)),
           padding: const MaterialStatePropertyAll(EdgeInsets.all(15.0))),
@@ -263,28 +262,28 @@ class _EditHabitState extends State<EditHabit> {
   }
 
   void _selectIcon(BuildContext context) async {
-    IconData? newSelectedIcon = await showIconPicker(
-      context,
-      showSearchBar: false,
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-      showTooltips: true,
-      iconSize: 55,
-      iconColor: primary,
-      iconPickerShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          side: BorderSide(color: primary, width: 0.5)),
-      iconPackModes: [IconPack.custom],
-      customIconPack: myCustomIcons,
-      barrierDismissible: false,
-      title: Text(
-        'Pick an icon',
-        style: TextStyle(color: primary),
-      ),
-    );
+    IconPickerIcon? newSelectedIcon = await showIconPicker(context,
+        configuration: SinglePickerConfiguration(
+          showSearchBar: false,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          showTooltips: true,
+          iconSize: 55,
+          iconColor: primary,
+          iconPickerShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              side: BorderSide(color: primary, width: 0.5)),
+          iconPackModes: [IconPack.custom],
+          customIconPack: myCustomIcons,
+          barrierDismissible: false,
+          title: Text(
+            'Pick an icon',
+            style: TextStyle(color: primary),
+          ),
+        ));
 
-    if (newSelectedIcon != null && newSelectedIcon != selectedIcon) {
-      selectedIcon = newSelectedIcon;
+    if (newSelectedIcon != null && newSelectedIcon.data != selectedIcon) {
+      selectedIcon = newSelectedIcon.data;
       Iterable<String> myCustomIconsKeys = myCustomIcons.keys;
       for (var key in myCustomIconsKeys) {
         if (myCustomIcons[key] == selectedIcon!) {

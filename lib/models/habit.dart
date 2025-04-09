@@ -73,7 +73,7 @@ class Habit {
   }
 
   IconData getHabitsIcon() {
-    return myCustomIcons[iconName]!;
+    return myCustomIcons[iconName]!.data;
   }
 
   static Habit? findHabitByIndex(DatabaseUser user, positionIndex) {

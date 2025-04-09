@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
@@ -238,28 +239,28 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 
   void _selectIcon(BuildContext context) async {
-    IconData? newSelectedIcon = await showIconPicker(
-      context,
-      showSearchBar: false,
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-      showTooltips: true,
-      iconSize: 55,
-      iconColor: primary,
-      iconPickerShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          side: BorderSide(color: primary, width: 0.5)),
-      iconPackModes: [IconPack.custom],
-      customIconPack: myCustomIcons,
-      barrierDismissible: false,
-      title: Text(
-        'Pick an icon',
-        style: TextStyle(color: primary),
-      ),
-    );
+    IconPickerIcon? newSelectedIcon = await showIconPicker(context,
+        configuration: SinglePickerConfiguration(
+          showSearchBar: false,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          showTooltips: true,
+          iconSize: 55,
+          iconColor: primary,
+          iconPickerShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              side: BorderSide(color: primary, width: 0.5)),
+          iconPackModes: [IconPack.custom],
+          customIconPack: myCustomIcons,
+          barrierDismissible: false,
+          title: Text(
+            'Pick an icon',
+            style: TextStyle(color: primary),
+          ),
+        ));
 
     if (newSelectedIcon != null && newSelectedIcon != selectedIcon) {
-      selectedIcon = newSelectedIcon;
+      selectedIcon = newSelectedIcon.data;
       Iterable<String> myCustomIconsKeys = myCustomIcons.keys;
       for (var key in myCustomIconsKeys) {
         if (myCustomIcons[key] == selectedIcon!) {
