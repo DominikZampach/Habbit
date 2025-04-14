@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
@@ -14,12 +12,13 @@ class HabitEditCard extends StatefulWidget {
   final DatabaseService dbService;
   final Function updateEditBody;
 
-  const HabitEditCard(
-      {super.key,
-      required this.positionIndex,
-      required this.user,
-      required this.dbService,
-      required this.updateEditBody});
+  const HabitEditCard({
+    super.key,
+    required this.positionIndex,
+    required this.user,
+    required this.dbService,
+    required this.updateEditBody,
+  });
 
   @override
   State<HabitEditCard> createState() => _HabitCardState();
@@ -53,14 +52,18 @@ class _HabitCardState extends State<HabitEditCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EditHabit(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => EditHabit(
                     habit: habit,
                     user: widget.user,
                     dbService: widget.dbService,
-                  ))),
+                  ),
+            ),
+          ),
       child: Dismissible(
         key: Key("${habit.name}_${widget.positionIndex}"),
         direction: DismissDirection.startToEnd,
@@ -83,7 +86,9 @@ class _HabitCardState extends State<HabitEditCard> {
           width: MediaQuery.of(context).size.width * 0.92,
           height: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: Colors.red),
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.red,
+          ),
         ),
         child: Container(
           padding: const EdgeInsets.all(10.0),
@@ -91,22 +96,17 @@ class _HabitCardState extends State<HabitEditCard> {
           width: MediaQuery.of(context).size.width * 0.92,
           height: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: secondary),
+            borderRadius: BorderRadius.circular(15),
+            color: secondary,
+          ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: Colors.black,
-                size: 30,
-              ),
+              Icon(icon, color: Colors.black, size: 30),
               Expanded(
                 child: Text(
                   makeShorterName(habit.name),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: primary,
-                    fontSize: 22,
-                  ),
+                  style: TextStyle(color: primary, fontSize: 22),
                 ),
               ),
             ],
