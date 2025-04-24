@@ -37,7 +37,6 @@ class _HabitCardState extends State<HabitEditCard> {
 
   @override
   void initState() {
-    setState(() {});
     for (int i = 0; i < widget.user.habitsInClass.length; i++) {
       if (widget.user.habitsInClass[i].positionIndex == widget.positionIndex) {
         habit = widget.user.habitsInClass[i];
@@ -65,7 +64,7 @@ class _HabitCardState extends State<HabitEditCard> {
             ),
           ),
       child: Dismissible(
-        key: Key("${habit.name}_${widget.positionIndex}"),
+        key: widget.key!,
         direction: DismissDirection.startToEnd,
         onDismissed: (direction) async {
           // Delete the habit

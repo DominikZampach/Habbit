@@ -124,7 +124,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
     return ElevatedButton(
       onPressed: _createHabitFunc,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(secondary.withOpacity(0.5)),
+        backgroundColor: WidgetStateProperty.all(
+          secondary.withValues(alpha: 0.5),
+        ),
       ),
       child: const Text(
         "Create Habit",
