@@ -12,26 +12,29 @@ class Habit {
   String iconName;
   int positionIndex;
 
-  Habit(
-      {required this.name,
-      required this.daysToDo,
-      required this.daysDone,
-      required this.note,
-      required this.notificationTime,
-      required this.iconName,
-      required this.positionIndex});
+  Habit({
+    required this.name,
+    required this.daysToDo,
+    required this.daysDone,
+    required this.note,
+    required this.notificationTime,
+    required this.iconName,
+    required this.positionIndex,
+  });
 
   Habit.fromJson(Map<String, Object?> json) // Převod JSON objektu na Class
-      : this(
-            name: json['name']! as String,
-            daysToDo: json['daysToDo']! as String,
-            daysDone: (json['daysDone'] as List<dynamic>)
+    : this(
+        name: json['name']! as String,
+        daysToDo: json['daysToDo']! as String,
+        daysDone:
+            (json['daysDone'] as List<dynamic>)
                 .map((e) => e as Timestamp)
                 .toList(),
-            note: json['note']! as String,
-            notificationTime: json['notificationTime']! as Timestamp,
-            iconName: json['iconName']! as String,
-            positionIndex: json['positionIndex']! as int);
+        note: json['note']! as String,
+        notificationTime: json['notificationTime']! as Timestamp,
+        iconName: json['iconName']! as String,
+        positionIndex: json['positionIndex']! as int,
+      );
 
   Map<String, Object?> toJson() {
     return {
@@ -41,7 +44,7 @@ class Habit {
       'note': note,
       'notificationTime': notificationTime,
       'iconName': iconName,
-      'positionIndex': positionIndex
+      'positionIndex': positionIndex,
     };
   }
 
@@ -54,8 +57,12 @@ class Habit {
 
     for (int index = 0; index < daysDone.length; index++) {
       DateTime doneDate = daysDone[index].toDate();
-      DateTime doneDateWithSetTime =
-          DateTime(doneDate.year, doneDate.month, doneDate.day, 2);
+      DateTime doneDateWithSetTime = DateTime(
+        doneDate.year,
+        doneDate.month,
+        doneDate.day,
+        2,
+      );
 
       print(doneDateWithSetTime);
 
@@ -68,7 +75,7 @@ class Habit {
   }
 
   bool isHabitDoneThisDate(DateTime date) {
-    // TODO: Create this instead of method up
+    // TODO: Create this instead of method up here
     return false;
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
-import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/pages/add_habit.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/habit_edit_card.dart';
@@ -113,7 +112,7 @@ class _EditBodyState extends State<EditBody> {
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           padding: const EdgeInsets.all(12.0),
-          backgroundColor: secondary.withOpacity(0.5),
+          backgroundColor: secondary.withValues(alpha: 0.5),
         ),
         child: Icon(Icons.add, size: 45, color: primary),
       ),

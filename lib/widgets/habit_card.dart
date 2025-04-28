@@ -11,12 +11,13 @@ class HabitCard extends StatefulWidget {
   final Function onHabitToggled;
   final DatabaseService dbService;
 
-  const HabitCard(
-      {super.key,
-      required this.positionIndex,
-      required this.user,
-      required this.onHabitToggled,
-      required this.dbService});
+  const HabitCard({
+    super.key,
+    required this.positionIndex,
+    required this.user,
+    required this.onHabitToggled,
+    required this.dbService,
+  });
 
   @override
   State<HabitCard> createState() => _HabitCardState();
@@ -53,80 +54,110 @@ class _HabitCardState extends State<HabitCard> {
     return habitCardNotDone(context);
   }
 
-  Container habitCardNotDone(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      margin: const EdgeInsets.all(5.0),
-      width: MediaQuery.of(context).size.width * 0.92,
-      height: 60,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: secondary),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.black,
-            size: 30,
-          ),
-          Expanded(
-            child: Text(
-              makeShorterName(habit.name),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: primary,
-                fontSize: 22,
+  GestureDetector habitCardNotDone(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _onTapHabitCard(context),
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(5.0),
+        width: MediaQuery.of(context).size.width * 0.92,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: secondary,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.black, size: 30),
+            Expanded(
+              child: Text(
+                makeShorterName(habit.name),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: primary, fontSize: 22),
               ),
             ),
-          ),
-          _checkbox()
-        ],
+            _checkbox(),
+          ],
+        ),
       ),
     );
   }
 
-  Container habitCardDone(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      margin: const EdgeInsets.all(5.0),
-      width: MediaQuery.of(context).size.width * 0.92,
-      height: 60,
-      decoration: BoxDecoration(
+  GestureDetector habitCardDone(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _onTapHabitCard(context),
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(5.0),
+        width: MediaQuery.of(context).size.width * 0.92,
+        height: 60,
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: cRed.withOpacity(0.6)),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.black,
-            size: 30,
-          ),
-          Expanded(
-            child: Text(
-              makeShorterName(habit.name),
-              textAlign: TextAlign.center,
-              style: TextStyle(
+          color: cRed..withValues(alpha: 0.6),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.black, size: 30),
+            Expanded(
+              child: Text(
+                makeShorterName(habit.name),
+                textAlign: TextAlign.center,
+                style: TextStyle(
                   color: primary,
                   fontSize: 22,
-                  decoration: TextDecoration.lineThrough),
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ),
+            _checkbox(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onTapHabitCard(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black87.withValues(alpha: 0.5),
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            width: MediaQuery.of(context).size.width * 0.9,
+            decoration: BoxDecoration(
+              color: secondary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Text(
+                "More information about '${habit.name}'",
+                style: TextStyle(fontSize: 25.0),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-          _checkbox()
-        ],
-      ),
+        );
+      },
     );
   }
 
   Checkbox _checkbox() {
     return Checkbox(
-        value: todayCompleted,
-        checkColor: primary,
-        shape: const CircleBorder(),
-        onChanged: ((value) => onChangedCheckboxLogic(value)));
+      value: todayCompleted,
+      checkColor: primary,
+      shape: const CircleBorder(),
+      onChanged: ((value) => onChangedCheckboxLogic(value)),
+    );
   }
 
   void onChangedCheckboxLogic(value) {
-    DateTime today = DateTime
-        .now(); // TODO: This also needs to be adjusted to usage for more than 1 day (like user can scroll in calendar and fix some days)
+    DateTime today =
+        DateTime.now(); // TODO: This also needs to be adjusted to usage for more than 1 day (like user can scroll in calendar and fix some days)
     today = DateTime(today.year, today.month, today.day);
     // This mades it set to date + 02:00:00, but it is alright, I will work with it
     // Hope it will work even in winter/summer time 💀

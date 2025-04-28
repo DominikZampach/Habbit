@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_init_to_null
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
@@ -189,7 +191,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       ? Icon(
                         Icons.add_circle_rounded,
                         size: 60,
-                        color: cRed.withOpacity(0.8),
+                        color: cRed.withValues(alpha: 0.8),
                       )
                       : Icon(selectedIcon!, size: 60, color: primary),
             ),
@@ -221,15 +223,15 @@ class _AddHabitPageState extends State<AddHabitPage> {
         setState(() {});
       },
       style: ButtonStyle(
-        shape: const MaterialStatePropertyAll(
+        shape: const WidgetStatePropertyAll(
           CircleBorder(eccentricity: 0, side: BorderSide.none),
         ),
-        backgroundColor: MaterialStatePropertyAll(
+        backgroundColor: WidgetStatePropertyAll(
           isDaySelected[i - 1]
-              ? secondary.withOpacity(0.5)
-              : tertiary.withOpacity(0.3),
+              ? secondary.withValues(alpha: 0.5)
+              : tertiary.withValues(alpha: 0.3),
         ),
-        padding: const MaterialStatePropertyAll(EdgeInsets.all(15.0)),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(15.0)),
       ),
       child: Text(
         daysMap[i]!.substring(0, 3),
@@ -333,7 +335,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               obscureText: false,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: secondary.withOpacity(0.4),
+                fillColor: secondary.withValues(alpha: 0.4),
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10),
@@ -373,7 +375,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
             maxLines: 2,
             decoration: InputDecoration(
               filled: true,
-              fillColor: secondary.withOpacity(0.4),
+              fillColor: secondary.withValues(alpha: 0.4),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10),

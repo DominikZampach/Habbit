@@ -191,7 +191,7 @@ class _EditHabitState extends State<EditHabit> {
                       ? Icon(
                         Icons.add_circle_rounded,
                         size: 60,
-                        color: cRed.withOpacity(0.8),
+                        color: cRed.withValues(alpha: 0.8),
                       )
                       : Icon(selectedIcon!, size: 60, color: primary),
             ),
@@ -228,8 +228,8 @@ class _EditHabitState extends State<EditHabit> {
         ),
         backgroundColor: WidgetStatePropertyAll(
           isDaySelected[i - 1]
-              ? secondary.withOpacity(0.5)
-              : tertiary.withOpacity(0.3),
+              ? secondary.withValues(alpha: 0.5)
+              : tertiary.withValues(alpha: 0.3),
         ),
         padding: const WidgetStatePropertyAll(EdgeInsets.all(15.0)),
       ),
@@ -287,7 +287,7 @@ class _EditHabitState extends State<EditHabit> {
       selectedIcon = newSelectedIcon.data;
       Iterable<String> myCustomIconsKeys = myCustomIcons.keys;
       for (var key in myCustomIconsKeys) {
-        if (myCustomIcons[key] == selectedIcon!) {
+        if (myCustomIcons[key]!.data == selectedIcon!) {
           iconName = key;
           break;
         }
@@ -320,7 +320,7 @@ class _EditHabitState extends State<EditHabit> {
               obscureText: false,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: secondary.withOpacity(0.4),
+                fillColor: secondary..withValues(alpha: 0.4),
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10),
@@ -360,7 +360,7 @@ class _EditHabitState extends State<EditHabit> {
             maxLines: 2,
             decoration: InputDecoration(
               filled: true,
-              fillColor: secondary.withOpacity(0.4),
+              fillColor: secondary..withValues(alpha: 0.4),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10),

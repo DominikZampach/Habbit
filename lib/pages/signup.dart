@@ -90,7 +90,7 @@ class SignUp extends StatelessWidget {
             obscureText: true,
             decoration: InputDecoration(
               filled: true,
-              fillColor: secondary.withOpacity(0.4),
+              fillColor: secondary.withValues(alpha: 0.4),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10),
