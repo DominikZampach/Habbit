@@ -71,9 +71,12 @@ class _HabitCardState extends State<HabitCard> {
             Icon(icon, color: Colors.black, size: 30),
             Expanded(
               child: Text(
-                makeShorterName(habit.name),
+                habit.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: primary, fontSize: 22),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
               ),
             ),
             _checkbox(),
@@ -93,20 +96,23 @@ class _HabitCardState extends State<HabitCard> {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: cRed..withValues(alpha: 0.6),
+          color: cRed.withValues(alpha: 0.8),
         ),
         child: Row(
           children: [
             Icon(icon, color: Colors.black, size: 30),
             Expanded(
               child: Text(
-                makeShorterName(habit.name),
+                habit.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: primary,
                   fontSize: 22,
                   decoration: TextDecoration.lineThrough,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
               ),
             ),
             _checkbox(),
@@ -156,8 +162,7 @@ class _HabitCardState extends State<HabitCard> {
   }
 
   void onChangedCheckboxLogic(value) {
-    DateTime today =
-        DateTime.now(); // TODO: This also needs to be adjusted to usage for more than 1 day (like user can scroll in calendar and fix some days)
+    DateTime today = DateTime.now();
     today = DateTime(today.year, today.month, today.day);
     // This mades it set to date + 02:00:00, but it is alright, I will work with it
     // Hope it will work even in winter/summer time 💀
@@ -172,13 +177,5 @@ class _HabitCardState extends State<HabitCard> {
       widget.dbService.updateUser(widget.user);
     });
     widget.onHabitToggled();
-  }
-
-  String makeShorterName(String name) {
-    if (name.length > 22) {
-      return ("${name.substring(0, 22)}...");
-    } else {
-      return name;
-    }
   }
 }

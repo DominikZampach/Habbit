@@ -103,9 +103,12 @@ class _HabitCardState extends State<HabitEditCard> {
               Icon(icon, color: Colors.black, size: 30),
               Expanded(
                 child: Text(
-                  makeShorterName(habit.name),
+                  habit.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: primary, fontSize: 22),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
                 ),
               ),
             ],
@@ -113,13 +116,5 @@ class _HabitCardState extends State<HabitEditCard> {
         ),
       ),
     );
-  }
-
-  String makeShorterName(String name) {
-    if (name.length > 22) {
-      return ("${name.substring(0, 22)}...");
-    } else {
-      return name;
-    }
   }
 }

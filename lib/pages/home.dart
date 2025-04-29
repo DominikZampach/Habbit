@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     return BottomBarDefault(
       items: navbarItems,
       backgroundColor: tertiary,
-      color: primary.withOpacity(.5),
+      color: primary.withValues(alpha: 0.5),
       colorSelected: primary,
       indexSelected: visit,
       paddingVertical: 16.0,
@@ -114,18 +114,6 @@ class _HomePageState extends State<HomePage> {
       toolbarHeight: 80.0,
       leading: const Kralicek(height: 80.0, padding: 15.0),
       leadingWidth: 90.0,
-      actions: [_calendarIcon()],
-      flexibleSpace: const SizedBox(height: 5.0),
-      bottom: PreferredSize(
-        preferredSize:
-            isCalendarShown
-                ? const Size.fromHeight(90.0)
-                : const Size.fromHeight(0.0),
-        child: Placeholder(
-          fallbackHeight: isCalendarShown ? 90.0 : 0.0,
-          color: isCalendarShown ? Colors.green : Colors.red,
-        ),
-      ),
     );
   }
 
@@ -144,21 +132,6 @@ class _HomePageState extends State<HomePage> {
       toolbarHeight: 80.0,
       leading: const Kralicek(height: 80.0, padding: 15.0),
       leadingWidth: 90.0,
-    );
-  }
-
-  GestureDetector _calendarIcon() {
-    return GestureDetector(
-      child: const Padding(
-        padding: EdgeInsets.all(15.0),
-        child: Icon(Icons.calendar_month, weight: 0.5, size: 55.0),
-      ),
-      onTap: () {
-        print("Clicked on calendar");
-        setState(() {
-          isCalendarShown = !isCalendarShown;
-        });
-      },
     );
   }
 
