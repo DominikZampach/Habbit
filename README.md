@@ -1,3 +1,7 @@
-# habbit_app
+# Habbit app - application for tracking your habits
+*Work in progress*
 
-A new Flutter project.
+Application made with Flutter Framework
+Both for Android and IOS
+
+## Some screenshots from the application:
