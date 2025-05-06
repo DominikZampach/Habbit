@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '396216193677',
     projectId: 'habbit-application',
     authDomain: 'habbit-application.firebaseapp.com',
-    storageBucket: 'habbit-application.appspot.com',
+    storageBucket: 'habbit-application.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:396216193677:android:efd29be974858b1cf308c4',
     messagingSenderId: '396216193677',
     projectId: 'habbit-application',
-    storageBucket: 'habbit-application.appspot.com',
+    storageBucket: 'habbit-application.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:396216193677:ios:1b017fdae06d75fcf308c4',
     messagingSenderId: '396216193677',
     projectId: 'habbit-application',
-    storageBucket: 'habbit-application.appspot.com',
+    storageBucket: 'habbit-application.firebasestorage.app',
     iosBundleId: 'com.example.habbitApp',
   );
 
@@ -71,7 +71,7 @@ class DefaultFirebaseOptions {
     appId: '1:396216193677:ios:1b017fdae06d75fcf308c4',
     messagingSenderId: '396216193677',
     projectId: 'habbit-application',
-    storageBucket: 'habbit-application.appspot.com',
+    storageBucket: 'habbit-application.firebasestorage.app',
     iosBundleId: 'com.example.habbitApp',
   );
 
@@ -81,6 +81,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '396216193677',
     projectId: 'habbit-application',
     authDomain: 'habbit-application.firebaseapp.com',
-    storageBucket: 'habbit-application.appspot.com',
+    storageBucket: 'habbit-application.firebasestorage.app',
   );
+
 }

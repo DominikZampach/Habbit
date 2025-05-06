@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "396216193677",
+    "project_id": "habbit-application",
+    "storage_bucket": "habbit-application.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396216193677:android:efd29be974858b1cf308c4",
+        "android_client_info": {
+          "package_name": "com.example.habbit_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKsUa_E_ay1LeJGPagB6BkBKHES_fbt_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

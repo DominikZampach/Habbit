@@ -12,6 +12,8 @@ import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/toast.dart';
 
+DateTime defaultDateTime = DateTime(2007, 6, 12, 0, 0, 0);
+
 class AddHabitPage extends StatefulWidget {
   final DatabaseService dbService;
   final DatabaseUser? dbUser;
@@ -83,7 +85,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
           notificationTime:
               notificationTime != null
                   ? Timestamp.fromDate(notificationTime!)
-                  : Timestamp.fromDate(DateTime(2007, 6, 12, 0, 0, 0)),
+                  : Timestamp.fromDate(defaultDateTime),
         ),
       );
       widget.dbService.updateUser(widget.dbUser!);

@@ -163,7 +163,16 @@ class _HabitCardState extends State<HabitCard> {
 
   void onChangedCheckboxLogic(value) {
     DateTime today = DateTime.now();
-    today = DateTime(today.year, today.month, today.day);
+    today = DateTime(
+      today.year,
+      today.month,
+      today.day,
+      0,
+      0,
+      0,
+      0,
+      0,
+    ); //TODO: .toUtc(); - musim si pak spravnou verzi stahnout i do sveho telefonu aby to fungovalo
     // This mades it set to date + 02:00:00, but it is alright, I will work with it
     // Hope it will work even in winter/summer time 💀
     setState(() {

@@ -19,24 +19,28 @@ class Login extends StatelessWidget {
       bottomNavigationBar: _signup(context),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Kralicek(height: 80.0, padding: 25.0),
-                const Text(
-                  "Login to\nHabbit",
-                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
-                  textAlign: TextAlign.center,
-                ),
-                _emailField(),
-                const SizedBox(height: 20.0),
-                _passwordField(),
-                const SizedBox(height: 35.0),
-                _loginButton(context),
-              ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Kralicek(height: 80.0, padding: 25.0),
+                  const Text(
+                    "Login to\nHabbit",
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                  _emailField(),
+                  const SizedBox(height: 20.0),
+                  _passwordField(),
+                  const SizedBox(height: 35.0),
+                  _loginButton(context),
+                ],
+              ),
             ),
           ),
         ),
