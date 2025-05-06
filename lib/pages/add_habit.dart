@@ -1,5 +1,8 @@
+// ignore_for_file: avoid_init_to_null
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/custom_icons.dart';
@@ -9,12 +12,17 @@ import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/toast.dart';
 
+DateTime defaultDateTime = DateTime(2007, 6, 12, 0, 0, 0);
+
 class AddHabitPage extends StatefulWidget {
   final DatabaseService dbService;
   final DatabaseUser? dbUser;
 
-  const AddHabitPage(
-      {super.key, required this.dbService, required this.dbUser});
+  const AddHabitPage({
+    super.key,
+    required this.dbService,
+    required this.dbUser,
+  });
 
   @override
   State<AddHabitPage> createState() => _AddHabitPageState();
@@ -38,7 +46,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
     4: "Thursday",
     5: "Friday",
     6: "Saturday",
-    7: "Sunday"
+    7: "Sunday",
   };
 
   @override
@@ -66,20 +74,26 @@ class _AddHabitPageState extends State<AddHabitPage> {
     } else if (selectedDays == "") {
       showToast("You must choose at least 1 day");
     } else {
-      widget.dbUser!.habitsInClass.add(Habit(
+      widget.dbUser!.habitsInClass.add(
+        Habit(
           name: _controllerName.text,
           note: _controllerNote.text,
           iconName: iconName,
           daysToDo: selectedDays,
           daysDone: [],
           positionIndex: widget.dbUser!.habitsInClass.length,
-          notificationTime: notificationTime != null
-              ? Timestamp.fromDate(notificationTime!)
-              : Timestamp.fromDate(DateTime(2007, 6, 12, 0, 0, 0))));
+          notificationTime:
+              notificationTime != null
+                  ? Timestamp.fromDate(notificationTime!)
+                  : Timestamp.fromDate(defaultDateTime),
+        ),
+      );
       widget.dbService.updateUser(widget.dbUser!);
       setState(() {});
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 
@@ -93,21 +107,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _showIconPickerIcon(context),
-                _nameField(),
-              ],
+              children: [_showIconPickerIcon(context), _nameField()],
             ),
             const SizedBox(height: 20),
             _daySelect(context),
             _noteField(),
             const SizedBox(height: 20.0),
             _notificationTimeSelect(context),
-            const SizedBox(
-              height: 20.0,
-            ),
+            const SizedBox(height: 20.0),
             // TODO: Edit this Create habit button
-            _createHabitButton()
+            _createHabitButton(),
           ],
         ),
       ),
@@ -119,14 +128,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
     return ElevatedButton(
       onPressed: _createHabitFunc,
       style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all(secondary.withOpacity(0.5))),
+        backgroundColor: WidgetStateProperty.all(
+          secondary.withValues(alpha: 0.5),
+        ),
+      ),
       child: const Text(
         "Create Habit",
-        style: TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -134,14 +142,25 @@ class _AddHabitPageState extends State<AddHabitPage> {
   ElevatedButton _notificationTimeSelect(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        TimeOfDay initial = notificationTime == null
-            ? TimeOfDay.now()
-            : TimeOfDay.fromDateTime(notificationTime!);
-        final TimeOfDay? time =
-            await showTimePicker(context: context, initialTime: initial);
+        TimeOfDay initial =
+            notificationTime == null
+                ? TimeOfDay.now()
+                : TimeOfDay.fromDateTime(notificationTime!);
+        final TimeOfDay? time = await showTimePicker(
+          context: context,
+          initialTime: initial,
+        );
         if (time != null) {
-          notificationTime = DateTime(2024, DateTime.august, 1, time.hour,
-              time.minute, 0, 0, 0); // Set to August 1. 2024 for unity all over
+          notificationTime = DateTime(
+            2024,
+            DateTime.august,
+            1,
+            time.hour,
+            time.minute,
+            0,
+            0,
+            0,
+          ); // Set to August 1. 2024 for unity all over
           setState(() {});
           //print(notificationTime.toString());
         }
@@ -149,7 +168,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
       child: Text(
         "Notification time",
         style: TextStyle(
-            color: primary, fontSize: 20, fontWeight: FontWeight.bold),
+          color: primary,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -163,22 +185,17 @@ class _AddHabitPageState extends State<AddHabitPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             GestureDetector(
               onTap: () => _selectIcon(context),
-              child: selectedIcon == null
-                  ? Icon(
-                      Icons.add_circle_rounded,
-                      size: 60,
-                      color: cRed.withOpacity(0.8),
-                    )
-                  : Icon(
-                      selectedIcon!,
-                      size: 60,
-                      color: primary,
-                    ),
+              child:
+                  selectedIcon == null
+                      ? Icon(
+                        Icons.add_circle_rounded,
+                        size: 60,
+                        color: cRed.withValues(alpha: 0.8),
+                      )
+                      : Icon(selectedIcon!, size: 60, color: primary),
             ),
           ],
         ),
@@ -191,16 +208,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (int i = 1; i < 5; i++) _dayButton(i),
-          ],
+          children: [for (int i = 1; i < 5; i++) _dayButton(i)],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (int i = 5; i < 8; i++) _dayButton(i),
-          ],
-        )
+          children: [for (int i = 5; i < 8; i++) _dayButton(i)],
+        ),
       ],
     );
   }
@@ -212,12 +225,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
         setState(() {});
       },
       style: ButtonStyle(
-          shape: const MaterialStatePropertyAll(
-              CircleBorder(eccentricity: 0, side: BorderSide.none)),
-          backgroundColor: MaterialStatePropertyAll(isDaySelected[i - 1]
-              ? secondary.withOpacity(0.5)
-              : tertiary.withOpacity(0.3)),
-          padding: const MaterialStatePropertyAll(EdgeInsets.all(15.0))),
+        shape: const WidgetStatePropertyAll(
+          CircleBorder(eccentricity: 0, side: BorderSide.none),
+        ),
+        backgroundColor: WidgetStatePropertyAll(
+          isDaySelected[i - 1]
+              ? secondary.withValues(alpha: 0.5)
+              : tertiary.withValues(alpha: 0.3),
+        ),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(15.0)),
+      ),
       child: Text(
         daysMap[i]!.substring(0, 3),
         style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
@@ -238,31 +255,31 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 
   void _selectIcon(BuildContext context) async {
-    IconData? newSelectedIcon = await showIconPicker(
+    IconPickerIcon? newSelectedIcon = await showIconPicker(
       context,
-      showSearchBar: false,
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-      showTooltips: true,
-      iconSize: 55,
-      iconColor: primary,
-      iconPickerShape: RoundedRectangleBorder(
+      configuration: SinglePickerConfiguration(
+        showSearchBar: false,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+        showTooltips: true,
+        iconSize: 55,
+        iconColor: primary,
+        iconPickerShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
-          side: BorderSide(color: primary, width: 0.5)),
-      iconPackModes: [IconPack.custom],
-      customIconPack: myCustomIcons,
-      barrierDismissible: false,
-      title: Text(
-        'Pick an icon',
-        style: TextStyle(color: primary),
+          side: BorderSide(color: primary, width: 0.5),
+        ),
+        iconPackModes: [IconPack.custom],
+        customIconPack: myCustomIcons,
+        barrierDismissible: false,
+        title: Text('Pick an icon', style: TextStyle(color: primary)),
       ),
     );
 
-    if (newSelectedIcon != null && newSelectedIcon != selectedIcon) {
-      selectedIcon = newSelectedIcon;
+    if (newSelectedIcon != null && newSelectedIcon.data != selectedIcon) {
+      selectedIcon = newSelectedIcon.data;
       Iterable<String> myCustomIconsKeys = myCustomIcons.keys;
       for (var key in myCustomIconsKeys) {
-        if (myCustomIcons[key] == selectedIcon!) {
+        if (myCustomIcons[key]!.data == selectedIcon!) {
           iconName = key;
           break;
         }
@@ -288,14 +305,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 10.0),
         child: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: primary,
-              size: 30.0,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
+          icon: Icon(Icons.arrow_back_ios, color: primary, size: 30.0),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }
@@ -312,27 +326,29 @@ class _AddHabitPageState extends State<AddHabitPage> {
             Text(
               "Habit name",
               style: TextStyle(
-                  color: primary,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 20.0),
+                color: primary,
+                fontWeight: FontWeight.normal,
+                fontSize: 20.0,
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextField(
               controller: _controllerName,
               obscureText: false,
               decoration: InputDecoration(
-                  filled: true,
-                  fillColor: secondary.withOpacity(0.4),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(10))),
+                filled: true,
+                fillColor: secondary.withValues(alpha: 0.4),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               style: TextStyle(
-                  color: primary,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 20.0),
-            )
+                color: primary,
+                fontWeight: FontWeight.normal,
+                fontSize: 20.0,
+              ),
+            ),
           ],
         ),
       ),
@@ -349,24 +365,30 @@ class _AddHabitPageState extends State<AddHabitPage> {
           Text(
             "Note",
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 20.0),
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 20.0,
+            ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextField(
             controller: _controllerNote,
             obscureText: false,
             maxLines: 2,
             decoration: InputDecoration(
-                filled: true,
-                fillColor: secondary.withOpacity(0.4),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10))),
+              filled: true,
+              fillColor: secondary.withValues(alpha: 0.4),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 20.0),
-          )
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 20.0,
+            ),
+          ),
         ],
       ),
     );
