@@ -1,0 +1,2 @@
+C:/Programming_projects/Mobile_development/Flutter/habbit_app/android/app/.cxx/Debug/q21606n5/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Programming_projects/Mobile_development/Flutter/habbit_app/android/app/.cxx/Debug/q21606n5/arm64-v8a/CMakeFiles/rebuild_cache.dir
