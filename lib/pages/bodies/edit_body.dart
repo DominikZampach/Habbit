@@ -31,60 +31,55 @@ class _EditBodyState extends State<EditBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: _floatingButtonEditBody(context),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ReorderableListView.builder(
-            itemCount: widget.dbUser!.habitsInClass.length,
-            onReorder:
-                (oldIndex, newIndex) => setState(() {
-                  if (newIndex > oldIndex) newIndex -= 1;
+      body: ReorderableListView.builder(
+        itemCount: widget.dbUser!.habitsInClass.length,
+        onReorder:
+            (oldIndex, newIndex) => setState(() {
+              if (newIndex > oldIndex) newIndex -= 1;
 
-                  final habitList = widget.dbUser!.habitsInClass;
+              final habitList = widget.dbUser!.habitsInClass;
 
-                  final movedHabit = habitList.firstWhere(
-                    (h) => h.positionIndex == oldIndex,
-                  );
+              final movedHabit = habitList.firstWhere(
+                (h) => h.positionIndex == oldIndex,
+              );
 
-                  // posuň ostatní tak, aby nedošlo ke kolizi pozic
-                  for (var h in habitList) {
-                    if (oldIndex < newIndex) {
-                      if (h.positionIndex > oldIndex &&
-                          h.positionIndex <= newIndex) {
-                        h.positionIndex -= 1;
-                      }
-                    } else {
-                      if (h.positionIndex < oldIndex &&
-                          h.positionIndex >= newIndex) {
-                        h.positionIndex += 1;
-                      }
-                    }
+              // posuň ostatní tak, aby nedošlo ke kolizi pozic
+              for (var h in habitList) {
+                if (oldIndex < newIndex) {
+                  if (h.positionIndex > oldIndex &&
+                      h.positionIndex <= newIndex) {
+                    h.positionIndex -= 1;
                   }
+                } else {
+                  if (h.positionIndex < oldIndex &&
+                      h.positionIndex >= newIndex) {
+                    h.positionIndex += 1;
+                  }
+                }
+              }
 
-                  movedHabit.positionIndex = newIndex;
-                }),
-            itemBuilder: (context, index) {
-              final habit = widget.dbUser!.habitsInClass.firstWhere(
-                (h) => h.positionIndex == index,
-              );
+              movedHabit.positionIndex = newIndex;
+            }),
+        itemBuilder: (context, index) {
+          final habit = widget.dbUser!.habitsInClass.firstWhere(
+            (h) => h.positionIndex == index,
+          );
 
-              return Center(
-                key: ValueKey(
-                  '${habit.name}_${widget.dbUser!.habitsInClass.indexOf(habit)}',
-                ),
-                child: HabitEditCard(
-                  key: ValueKey(
-                    '${habit.name}_${widget.dbUser!.habitsInClass.indexOf(habit)}',
-                  ),
-                  dbService: widget.dbService,
-                  positionIndex: index,
-                  user: widget.dbUser!,
-                  updateEditBody: setStateEditBody,
-                ),
-              );
-            },
-          ),
-        ),
+          return Center(
+            key: ValueKey(
+              '${habit.name}_${widget.dbUser!.habitsInClass.indexOf(habit)}',
+            ),
+            child: HabitEditCard(
+              key: ValueKey(
+                '${habit.name}_${widget.dbUser!.habitsInClass.indexOf(habit)}',
+              ),
+              dbService: widget.dbService,
+              positionIndex: index,
+              user: widget.dbUser!,
+              updateEditBody: setStateEditBody,
+            ),
+          );
+        },
       ),
     );
   }

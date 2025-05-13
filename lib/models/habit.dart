@@ -50,18 +50,17 @@ class Habit {
 
   bool isHabitDoneToday() {
     //Checks if the habit was completed today
-    DateTime now = DateTime.now();
-    DateTime todayDate = DateTime(now.year, now.month, now.day, 2);
+    DateTime now = DateTime.now().toUtc();
+    DateTime todayDate = DateTime.utc(now.year, now.month, now.day);
     print("today's date: ${todayDate.toString()}");
     print("days: ${daysDone.length}");
 
     for (int index = 0; index < daysDone.length; index++) {
-      DateTime doneDate = daysDone[index].toDate();
-      DateTime doneDateWithSetTime = DateTime(
+      DateTime doneDate = daysDone[index].toDate().toUtc();
+      DateTime doneDateWithSetTime = DateTime.utc(
         doneDate.year,
         doneDate.month,
         doneDate.day,
-        2,
       );
 
       print(doneDateWithSetTime);
