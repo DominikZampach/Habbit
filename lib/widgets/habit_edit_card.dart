@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
@@ -14,12 +12,13 @@ class HabitEditCard extends StatefulWidget {
   final DatabaseService dbService;
   final Function updateEditBody;
 
-  const HabitEditCard(
-      {super.key,
-      required this.positionIndex,
-      required this.user,
-      required this.dbService,
-      required this.updateEditBody});
+  const HabitEditCard({
+    super.key,
+    required this.positionIndex,
+    required this.user,
+    required this.dbService,
+    required this.updateEditBody,
+  });
 
   @override
   State<HabitEditCard> createState() => _HabitCardState();
@@ -38,7 +37,6 @@ class _HabitCardState extends State<HabitEditCard> {
 
   @override
   void initState() {
-    setState(() {});
     for (int i = 0; i < widget.user.habitsInClass.length; i++) {
       if (widget.user.habitsInClass[i].positionIndex == widget.positionIndex) {
         habit = widget.user.habitsInClass[i];
@@ -53,16 +51,20 @@ class _HabitCardState extends State<HabitEditCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EditHabit(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => EditHabit(
                     habit: habit,
                     user: widget.user,
                     dbService: widget.dbService,
-                  ))),
+                  ),
+            ),
+          ),
       child: Dismissible(
-        key: Key("${habit.name}_${widget.positionIndex}"),
+        key: widget.key!,
         direction: DismissDirection.startToEnd,
         onDismissed: (direction) async {
           // Delete the habit
@@ -83,7 +85,9 @@ class _HabitCardState extends State<HabitEditCard> {
           width: MediaQuery.of(context).size.width * 0.92,
           height: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: Colors.red),
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.red,
+          ),
         ),
         child: Container(
           padding: const EdgeInsets.all(10.0),
@@ -91,22 +95,20 @@ class _HabitCardState extends State<HabitEditCard> {
           width: MediaQuery.of(context).size.width * 0.92,
           height: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: secondary),
+            borderRadius: BorderRadius.circular(15),
+            color: secondary,
+          ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: Colors.black,
-                size: 30,
-              ),
+              Icon(icon, color: Colors.black, size: 30),
               Expanded(
                 child: Text(
-                  makeShorterName(habit.name),
+                  habit.name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: primary,
-                    fontSize: 22,
-                  ),
+                  style: TextStyle(color: primary, fontSize: 22),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
                 ),
               ),
             ],
@@ -114,13 +116,5 @@ class _HabitCardState extends State<HabitEditCard> {
         ),
       ),
     );
-  }
-
-  String makeShorterName(String name) {
-    if (name.length > 22) {
-      return ("${name.substring(0, 22)}...");
-    } else {
-      return name;
-    }
   }
 }

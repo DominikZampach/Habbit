@@ -82,22 +82,21 @@ class _HomePageState extends State<HomePage> {
 
   BottomBarDefault navbar() {
     return BottomBarDefault(
-        items: navbarItems,
-        backgroundColor: tertiary,
-        color: primary.withOpacity(.5),
-        colorSelected: primary,
-        indexSelected: visit,
-        paddingVertical: 16.0,
-        iconSize: 38.0,
-        pad: 0,
-        titleStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 12.0),
-        enableShadow: false,
-        onTap: (index) => setState(
-              () {
-                visit = index;
-              },
-            ));
+      items: navbarItems,
+      backgroundColor: tertiary,
+      color: primary.withValues(alpha: 0.5),
+      colorSelected: primary,
+      indexSelected: visit,
+      paddingVertical: 16.0,
+      iconSize: 38.0,
+      pad: 0,
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12.0),
+      enableShadow: false,
+      onTap:
+          (index) => setState(() {
+            visit = index;
+          }),
+    );
   }
 
   AppBar _appBarHome() {
@@ -115,17 +114,6 @@ class _HomePageState extends State<HomePage> {
       toolbarHeight: 80.0,
       leading: const Kralicek(height: 80.0, padding: 15.0),
       leadingWidth: 90.0,
-      actions: [_calendarIcon()],
-      flexibleSpace: const SizedBox(height: 5.0),
-      bottom: PreferredSize(
-        preferredSize: isCalendarShown
-            ? const Size.fromHeight(90.0)
-            : const Size.fromHeight(0.0),
-        child: Placeholder(
-          fallbackHeight: isCalendarShown ? 90.0 : 0.0,
-          color: isCalendarShown ? Colors.green : Colors.red,
-        ),
-      ),
     );
   }
 
@@ -144,21 +132,6 @@ class _HomePageState extends State<HomePage> {
       toolbarHeight: 80.0,
       leading: const Kralicek(height: 80.0, padding: 15.0),
       leadingWidth: 90.0,
-    );
-  }
-
-  GestureDetector _calendarIcon() {
-    return GestureDetector(
-      child: const Padding(
-        padding: EdgeInsets.all(15.0),
-        child: Icon(Icons.calendar_month, weight: 0.5, size: 55.0),
-      ),
-      onTap: () {
-        print("Clicked on calendar");
-        setState(() {
-          isCalendarShown = !isCalendarShown;
-        });
-      },
     );
   }
 
@@ -203,24 +176,27 @@ class _HomePageState extends State<HomePage> {
       width: 500,
       height: 800,
       child: FutureBuilder(
-          future: databaseService.getUser(user!.uid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('User not found'));
-            } else {
-              DatabaseUser userData = snapshot.data!;
-              return ListView.builder(
-                  itemCount: userData.habitsInClass.length,
-                  itemBuilder: ((context, index) {
-                    return ListTile(
-                        title: Text(userData.habitsInClass[index].name));
-                  }));
-            }
-          }),
+        future: databaseService.getUser(user!.uid),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text('User not found'));
+          } else {
+            DatabaseUser userData = snapshot.data!;
+            return ListView.builder(
+              itemCount: userData.habitsInClass.length,
+              itemBuilder: ((context, index) {
+                return ListTile(
+                  title: Text(userData.habitsInClass[index].name),
+                );
+              }),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -18,55 +18,59 @@ class SignUp extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: _signin(context),
       body: SafeArea(
-          child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Kralicek(
-                height: 80.0,
-                padding: 25.0,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
               ),
-              const Text(
-                "Register to\nHabbit",
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Kralicek(height: 80.0, padding: 25.0),
+                  const Text(
+                    "Register to\nHabbit",
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                  _emailField(),
+                  const SizedBox(height: 20.0),
+                  _passwordField(),
+                  const SizedBox(height: 35.0),
+                  _signupButton(context),
+                ],
               ),
-              _emailField(),
-              const SizedBox(height: 20.0),
-              _passwordField(),
-              const SizedBox(
-                height: 35.0,
-              ),
-              _signupButton(context)
-            ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 
   ElevatedButton _signupButton(BuildContext context) {
     return ElevatedButton(
-        onPressed: () async {
-          await AuthService().signup(
-              email: _emailController.text,
-              password: _passwordController.text,
-              context: context);
-        },
-        style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            backgroundColor: primary),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(
-            "Sign up",
-            style: TextStyle(fontSize: 30.0, color: background),
-          ),
-        ));
+      onPressed: () async {
+        await AuthService().signup(
+          email: _emailController.text,
+          password: _passwordController.text,
+          context: context,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        backgroundColor: primary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          "Sign up",
+          style: TextStyle(fontSize: 30.0, color: background),
+        ),
+      ),
+    );
   }
 
   Padding _passwordField() {
@@ -79,23 +83,29 @@ class SignUp extends StatelessWidget {
           Text(
             "Password",
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 24.0),
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 24.0,
+            ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextField(
             controller: _passwordController,
             obscureText: true,
             decoration: InputDecoration(
-                filled: true,
-                fillColor: secondary.withOpacity(0.4),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10))),
+              filled: true,
+              fillColor: secondary.withValues(alpha: 0.4),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 20.0),
-          )
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 20.0,
+            ),
+          ),
         ],
       ),
     );
@@ -111,27 +121,34 @@ class SignUp extends StatelessWidget {
           Text(
             "E-mail",
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 24.0),
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 24.0,
+            ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextField(
             controller: _emailController,
             decoration: InputDecoration(
-                filled: true,
-                hintText: 'example@gmail.com',
-                hintStyle: TextStyle(
-                    color: primary,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 20.0),
-                fillColor: secondary.withOpacity(0.4),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10))),
+              filled: true,
+              hintText: 'example@gmail.com',
+              hintStyle: TextStyle(
+                color: primary,
+                fontWeight: FontWeight.w300,
+                fontSize: 20.0,
+              ),
+              fillColor: secondary.withValues(alpha: 0.4),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             style: TextStyle(
-                color: primary, fontWeight: FontWeight.normal, fontSize: 20.0),
-          )
+              color: primary,
+              fontWeight: FontWeight.normal,
+              fontSize: 20.0,
+            ),
+          ),
         ],
       ),
     );
@@ -142,25 +159,34 @@ class SignUp extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20.0),
       child: RichText(
         textAlign: TextAlign.center,
-        text: TextSpan(children: [
-          TextSpan(
+        text: TextSpan(
+          children: [
+            TextSpan(
               text: "Already have an account? ",
               style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w300)),
-          TextSpan(
+                color: Theme.of(context).primaryColor,
+                fontSize: 24.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            TextSpan(
               text: "Log in",
               style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login()));
-                })
-        ]),
+                color: Theme.of(context).primaryColor,
+                fontSize: 24.0,
+                fontWeight: FontWeight.w600,
+              ),
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+            ),
+          ],
+        ),
       ),
     );
   }
