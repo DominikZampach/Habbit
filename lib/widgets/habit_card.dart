@@ -157,30 +157,25 @@ class _HabitCardState extends State<HabitCard> {
       value: todayCompleted,
       checkColor: primary,
       shape: const CircleBorder(),
-      onChanged: ((value) => onChangedCheckboxLogic(value)),
+      onChanged: ((value) => onChangedCheckboxLogic(value!)),
     );
   }
 
-  void onChangedCheckboxLogic(value) {
-    DateTime today = DateTime.now();
-    today = DateTime(
-      today.year,
-      today.month,
-      today.day,
-      0,
-      0,
-      0,
-      0,
-      0,
-    ); //TODO: .toUtc(); - musim si pak spravnou verzi stahnout i do sveho telefonu aby to fungovalo
-    // This mades it set to date + 02:00:00, but it is alright, I will work with it
-    // Hope it will work even in winter/summer time 💀
+  void onChangedCheckboxLogic(bool value) {
+    DateTime today = DateTime.now().toUtc();
+    today = DateTime.utc(today.year, today.month, today.day);
+
     setState(() {
-      todayCompleted = value!;
+      todayCompleted = value;
       if (value == true) {
         habit.daysDone.add(Timestamp.fromDate(today));
       } else {
-        habit.daysDone.remove(Timestamp.fromDate(today));
+        // habit.daysDone.remove(Timestamp.fromDate(today));
+        habit.daysDone.removeWhere((ts) {
+          final date = ts.toDate().toUtc();
+          final tsDate = DateTime.utc(date.year, date.month, date.day);
+          return tsDate == today;
+        });
       }
       widget.user.habitsInClass[listPosition] = habit;
       widget.dbService.updateUser(widget.user);

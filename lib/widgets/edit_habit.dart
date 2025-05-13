@@ -142,7 +142,7 @@ class _EditHabitState extends State<EditHabit> {
     return ElevatedButton(
       onPressed: () async {
         TimeOfDay initial =
-            notificationTime == DateTime(2007, 6, 12, 0, 0, 0)
+            notificationTime == DateTime.utc(2007, 6, 12)
                 ? TimeOfDay.now()
                 : TimeOfDay.fromDateTime(notificationTime);
         final TimeOfDay? time = await showTimePicker(
@@ -150,15 +150,12 @@ class _EditHabitState extends State<EditHabit> {
           initialTime: initial,
         );
         if (time != null) {
-          notificationTime = DateTime(
+          notificationTime = DateTime.utc(
             2024,
             DateTime.august,
             1,
             time.hour,
             time.minute,
-            0,
-            0,
-            0,
           ); // Set to August 1. 2024 for unity all over
           setState(() {});
         }
