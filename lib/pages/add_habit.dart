@@ -12,7 +12,7 @@ import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
 import 'package:habbit_app/widgets/toast.dart';
 
-DateTime defaultDateTime = DateTime(2007, 6, 12, 0, 0, 0);
+DateTime defaultDateTime = DateTime.utc(2007, 6, 12, 0, 0, 0);
 
 class AddHabitPage extends StatefulWidget {
   final DatabaseService dbService;
@@ -151,7 +151,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
           initialTime: initial,
         );
         if (time != null) {
-          notificationTime = DateTime(
+          notificationTime = DateTime.utc(
             2024,
             DateTime.august,
             1,
