@@ -4,6 +4,7 @@ import 'package:habbit_app/const.dart';
 import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/services/database.dart';
+import 'package:vibration/vibration.dart';
 
 class HabitCard extends StatefulWidget {
   final int positionIndex;
@@ -165,12 +166,15 @@ class _HabitCardState extends State<HabitCard> {
     DateTime today = DateTime.now().toUtc();
     today = DateTime.utc(today.year, today.month, today.day);
 
-    setState(() {
+    setState(() async {
       todayCompleted = value;
       if (value == true) {
         habit.daysDone.add(Timestamp.fromDate(today));
+        //? Vibrations
+        if (await Vibration.hasVibrator()) {
+          Vibration.vibrate(duration: 555);
+        }
       } else {
-        // habit.daysDone.remove(Timestamp.fromDate(today));
         habit.daysDone.removeWhere((ts) {
           final date = ts.toDate().toUtc();
           final tsDate = DateTime.utc(date.year, date.month, date.day);
