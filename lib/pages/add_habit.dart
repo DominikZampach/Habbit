@@ -151,7 +151,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
           initialTime: initial,
         );
         if (time != null) {
-          notificationTime = DateTime.utc.utc(
+          notificationTime = DateTime.utc(
             2024,
             DateTime.august,
             1,
