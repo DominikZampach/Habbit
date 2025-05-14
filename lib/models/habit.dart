@@ -56,6 +56,8 @@ class Habit {
     for (int index = 0; index < daysDone.length; index++) {
       DateTime doneDate = daysDone[index].toDate().toUtc();
       DateTime doneDateWithSetTime = DateTime.utc(
+      DateTime doneDate = daysDone[index].toDate().toUtc();
+      DateTime doneDateWithSetTime = DateTime.utc(
         doneDate.year,
         doneDate.month,
         doneDate.day,

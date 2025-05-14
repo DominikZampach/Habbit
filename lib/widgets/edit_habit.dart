@@ -151,6 +151,7 @@ class _EditHabitState extends State<EditHabit> {
         );
         if (time != null) {
           notificationTime = DateTime.utc(
+          notificationTime = DateTime.utc(
             2024,
             DateTime.august,
             1,
