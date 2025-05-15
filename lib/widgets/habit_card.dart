@@ -172,7 +172,7 @@ class _HabitCardState extends State<HabitCard> {
         habit.daysDone.add(Timestamp.fromDate(today));
         //? Vibrations
         if (await Vibration.hasVibrator()) {
-          Vibration.vibrate(duration: 555);
+          Vibration.vibrate(duration: 200);
         }
       } else {
         habit.daysDone.removeWhere((ts) {
