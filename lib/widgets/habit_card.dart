@@ -162,28 +162,29 @@ class _HabitCardState extends State<HabitCard> {
     );
   }
 
-  void onChangedCheckboxLogic(bool value) {
+  void onChangedCheckboxLogic(bool value) async {
     DateTime today = DateTime.now().toUtc();
     today = DateTime.utc(today.year, today.month, today.day);
 
-    setState(() async {
-      todayCompleted = value;
-      if (value == true) {
-        habit.daysDone.add(Timestamp.fromDate(today));
-        //? Vibrations
-        if (await Vibration.hasVibrator()) {
-          Vibration.vibrate(duration: 200);
-        }
-      } else {
-        habit.daysDone.removeWhere((ts) {
-          final date = ts.toDate().toUtc();
-          final tsDate = DateTime.utc(date.year, date.month, date.day);
-          return tsDate == today;
-        });
+    todayCompleted = value;
+    if (value == true) {
+      habit.daysDone.add(Timestamp.fromDate(today));
+      //? Vibrations
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(duration: 200);
       }
+    } else {
+      habit.daysDone.removeWhere((ts) {
+        final date = ts.toDate().toUtc();
+        final tsDate = DateTime.utc(date.year, date.month, date.day);
+        return tsDate == today;
+      });
+    }
+
+    setState(() {
       widget.user.habitsInClass[listPosition] = habit;
       widget.dbService.updateUser(widget.user);
+      widget.onHabitToggled();
     });
-    widget.onHabitToggled();
   }
 }

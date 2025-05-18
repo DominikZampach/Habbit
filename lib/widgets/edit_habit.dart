@@ -154,6 +154,8 @@ class _EditHabitState extends State<EditHabit> {
             2024,
             DateTime.august,
             1,
+            time.hour,
+            time.minute,
           ); // Set to August 1. 2024 for unity all over
           setState(() {});
         }
