@@ -10,6 +10,7 @@ import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
+import 'package:habbit_app/services/notification_services.dart';
 import 'package:habbit_app/widgets/toast.dart';
 
 DateTime defaultDateTime = DateTime.utc(2007, 6, 12, 0, 0, 0);
@@ -65,29 +66,36 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
   void _createHabitFunc() {
     convertIsDaySelectedToSelectedDays();
-    if (_controllerName.text.length > 22) {
-      showToast("Name is too long, make it under 22 characters");
-    } else if (_controllerName.text.isEmpty) {
+    if (_controllerName.text.isEmpty) {
       showToast("You must enter habit name");
     } else if (selectedIcon == null) {
       showToast("You must choose an icon");
     } else if (selectedDays == "") {
       showToast("You must choose at least 1 day");
     } else {
-      widget.dbUser!.habitsInClass.add(
-        Habit(
-          name: _controllerName.text,
-          note: _controllerNote.text,
-          iconName: iconName,
-          daysToDo: selectedDays,
-          daysDone: [],
-          positionIndex: widget.dbUser!.habitsInClass.length,
-          notificationTime:
-              notificationTime != null
-                  ? Timestamp.fromDate(notificationTime!)
-                  : Timestamp.fromDate(defaultDateTime),
-        ),
+      Habit habit = new Habit(
+        name: _controllerName.text,
+        note: _controllerNote.text,
+        iconName: iconName,
+        daysToDo: selectedDays,
+        daysDone: [],
+        positionIndex: widget.dbUser!.habitsInClass.length,
+        notificationTime:
+            notificationTime != null
+                ? Timestamp.fromDate(notificationTime!)
+                : Timestamp.fromDate(defaultDateTime),
       );
+      widget.dbUser!.habitsInClass.add(habit);
+      if (notificationTime != null) {
+        NotifiService().scheduleNotification(
+          id: habit.name.hashCode,
+          title: "Reminder: ${habit.name}",
+          body: "It's time to do your habit",
+          hour: notificationTime!.hour,
+          minute: notificationTime!.minute,
+          weekdays: selectedDays,
+        );
+      }
       widget.dbService.updateUser(widget.dbUser!);
       setState(() {});
       Navigator.push(
@@ -159,7 +167,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
             time.minute,
           ); // Set to August 1. 2024 for unity all over
           setState(() {});
-          //print(notificationTime.toString());
         }
       },
       child: Text(

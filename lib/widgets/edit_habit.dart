@@ -8,6 +8,7 @@ import 'package:habbit_app/models/database_user.dart';
 import 'package:habbit_app/models/habit.dart';
 import 'package:habbit_app/pages/home.dart';
 import 'package:habbit_app/services/database.dart';
+import 'package:habbit_app/services/notification_services.dart';
 
 class EditHabit extends StatefulWidget {
   final Habit habit;
@@ -123,6 +124,16 @@ class _EditHabitState extends State<EditHabit> {
                 positionIndex: widget.habit.positionIndex,
               );
               widget.dbService.updateUser(widget.user);
+
+              //? Update Notifications
+              NotifiService().scheduleNotification(
+                id: widget.user.habitsInClass[i].name.hashCode,
+                title: "Reminder: ${widget.user.habitsInClass[i].name}",
+                body: "It's time to do your habit",
+                hour: notificationTime.hour,
+                minute: notificationTime.minute,
+                weekdays: selectedDays,
+              );
               break;
             }
           }

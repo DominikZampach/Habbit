@@ -51,18 +51,19 @@ class _HabitCardState extends State<HabitEditCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => EditHabit(
-                    habit: habit,
-                    user: widget.user,
-                    dbService: widget.dbService,
-                  ),
-            ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => EditHabit(
+                  habit: habit,
+                  user: widget.user,
+                  dbService: widget.dbService,
+                ),
           ),
+        );
+      },
       child: Dismissible(
         key: widget.key!,
         direction: DismissDirection.startToEnd,
